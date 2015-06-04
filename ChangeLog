@@ -1,0 +1,11 @@
+2015-06-04  Daniel Hawkins
+    * doc/DB_Schema: Created database schema documentation.
+
+2015-06-03  Daniel Hawkins
+    * INSTALL: Created Rudimentary installation instructions.
+    * install_linux.sh: Created rudimentary install script for Linux.
+    * src/bookdblite.pl: Began creating file for interfacing the
+      database with the user.
+    * install_win.bat: Created file for attempt to install in Windows.
+    * doc/DB_Schema: Created file for documentation outlining the
+      database schema to be used by the program.

@@ -1,0 +1,41 @@
+#
+# This file outlines the database schema to be used in the SQLite
+# database backend for this script.
+#
+# Author: Daniel Hawkins
+# Last Modified: 2015-06-04
+#
+
+Table       Field           Type            Nullable        PK      FK      FK_To_Table
+----------------------------------------------------------------------------------------
+Book        BookID          int             N               Y       N       -
+Book        Title           varchar(30)     N               N       N       -
+Book        Subtitle        varchar(60)     Y               N       N       -
+Book        Year            shortint        Y               N       N       -
+Book        TypeID          tinyint         N               N       Y       Type
+
+BookOwner   BookID          int             N               Y       Y       Book
+BookOwner   OwnerID         int             N               Y       Y       Owner
+BookOwner   Quantity        smallint        N               N       N       -
+
+Owner       OwnerID         int             N               Y       N       -
+Owner       LastName        varchar(30)     N               N       N       -
+Owner       FirstName       varchar(30)     N               N       N       -
+
+BookGenre   BookID          int             N               Y       Y       Book
+BookGenre   GenreID         int             N               Y       Y       Genre
+
+Genre       GenreID         int             N               Y       N       -
+Genre       GenreName       varchar(20)     N               N       N       -
+
+Type        TypeID          int             N               Y       N       -
+Type        TypeName        char(9)         N               N       N       -
+
+BookAuthor  BookID          int             N               Y       Y       Book
+BookAuthor  AuthorID        int             N               Y       Y       Author
+BookAuthor  AuthorOrder     smallint        Y               N       N       -
+
+Author      AuthorID        int             N               Y       N       -
+Author      AuthorLast      varchar(30)     N               N       N       -
+Author      AuthorFirst     varchar(30)     N               N       N       -
+Author      AuthorMiddle    varchar(30)     N               N       N       -

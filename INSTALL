@@ -1,0 +1,13 @@
+Installation Instructions
+-------------------------
+
+Dependencies:
+    A Perl 5 interpreter
+    Package DBD::SQLite3 (provided by libdbd-sqlite3-perl on Debian systems)
+
+To install to the system path:
+    Run the install script in install_linux.sh or install_win.bat,
+    depending on your operating system.
+
+To run:
+    Type bookdblite in the command-line. It should then run as expected.
