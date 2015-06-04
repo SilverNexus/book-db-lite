@@ -1,5 +1,6 @@
 2015-06-04  Daniel Hawkins
     * doc/DB_Schema: Created database schema documentation.
+    * full_commit.pl: Created script to combine git commit and git push steps.
 
 2015-06-03  Daniel Hawkins
     * INSTALL: Created Rudimentary installation instructions.
