@@ -13,6 +13,7 @@ Book        Title           varchar(30)     N               N       N       -
 Book        Subtitle        varchar(60)     Y               N       N       -
 Book        Year            shortint        Y               N       N       -
 Book        TypeID          tinyint         N               N       Y       Type
+Book        ISBN13          char(13)        Y               N       N       -
 
 BookOwner   BookID          int             N               Y       Y       Book
 BookOwner   OwnerID         int             N               Y       Y       Owner
