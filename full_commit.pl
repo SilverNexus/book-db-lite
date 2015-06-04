@@ -13,7 +13,12 @@ use strict;
 
 # First, we take the message argument from the command line.
 
-my $commit_message = shift;
+my $commit_message = shift || die("A commit message is required to make a commit.\n");
+
+# If commit_message was the only arg, still bail; we're committing nothing otherwise.
+if ($#ARGV eq -1){
+    die("A least one file must be committed for the commit to be meaningful.\n");
+}
 
 if ($commit_message =~ "-h" || $commit_message =~ "--help"){
     &show_usage;
