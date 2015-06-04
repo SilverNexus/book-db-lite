@@ -24,8 +24,12 @@ if ($commit_message =~ "-h" || $commit_message =~ "--help"){
 `git commit -m "$commit_message" @ARGV` || die("Commit failed with status $?!\n");
 
 # If we committed, push the commit to the remote master.
-# Also, make sure it succeeds.
-`git push` || die("Push failed with status $?!\n");
+`git push`;
+
+# Make sure it succeeds.
+if ($? ne 0){
+    die("Push failed with status $?!\n");
+}
 
 #
 # show_usage
