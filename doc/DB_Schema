@@ -40,3 +40,5 @@ Author      AuthorID        integer         N               Y       N       -
 Author      AuthorLast      text            N               N       N       -
 Author      AuthorFirst     text            N               N       N       -
 Author      AuthorMiddle    text            Y               N       N       -
+
+Version     SchemaVersion   text            N               N       N       -
