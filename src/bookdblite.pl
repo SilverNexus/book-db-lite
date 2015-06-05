@@ -203,13 +203,52 @@ sub export_data{
 # Opens the database for read/write, and loads the pcre extension into the db.
 #
 sub load_db{
-    $dbh = DBI->connect("dbi:SQLite:dbname=$db_name","","",\%attr)
-        or die ("Failed to connect to database at $db_name.");
+    $dbh = DBI->connect("dbi:SQLite:dbname=$db_loc","","",\%attr)
+        or die ("Failed to connect to database at $db_loc.");
     # Enforce foreign keys
     $dbh->do("PRAGMA foreign_keys = ON;");
     # TODO: Load SQLite Regex extension
     
     # TODO: Check to see if db needs initialization. (Check for table Version).
+    eval{
+        my $vth = $dbh->prepare("SELECT SchemaVersion FROM Version;");
+        my $result = $vth->execute();
+        my $rownum = 0;
+        while (my @row = $vth->fetchrow_array()){
+            # If multiple rows in version, something's not right.
+            if (++$rownum gt 1){
+                my sel;
+                print "Database $db_loc appears to be malformed.\n";
+                do{
+                    print "Would you like to reinitialize the book database (Y/N)? ";
+                    # TODO: Read in user input
+                } while (sel != /[YyNn]/);
+                if (sel =~ /[Yy]/){
+                    &initialize_db;
+                }
+            }
+            # If schema version is too old, ask to update.
+            elsif ($row[0] < $SCHEMA_VERSION){
+                my sel;
+                print "Your book database may be out of date.\n";
+                print "New versions of the database provide addtional features and optimizations.\n";
+                print "Declining the upgrade will not affect program operation.\n";
+                do{
+                    print "Would you like to update your database schema to a newer version (Y/N)? ";
+                    # TODO: Read in user input
+                } while (sel != /[YyNn]/);
+                if (sel =~ /[Yy]/){
+                    &initialize_db;
+                }
+            }
+            # If schema version is too new, then don't even try to handle it.
+            elsif ($row[0] > $SCHEMA_VERSION){
+                print "Your database has a schema newer than this version of this program supports.\n";
+                print "Please upgrade to a newer version to use this book database.\n";
+                exit 1;
+            }
+        }
+    };
 }
 
 #

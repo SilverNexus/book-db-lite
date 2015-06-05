@@ -2,6 +2,7 @@
     * doc/DB_Schema: Updated the schema to use SQLite3 data types.
       Also added a Version table for keeping track of the schema version.
     * src/bookdblite.pl: Implemented database initialization.
+      Implemented database sanity and version checks for database load.
 
 2015-06-04  Daniel Hawkins
     * doc/DB_Schema: Created database schema documentation.
