@@ -20,8 +20,8 @@ BookOwner   OwnerID         integer         N               Y       Y       Owne
 BookOwner   Quantity        integer         N               N       N       -
 
 Owner       OwnerID         integer         N               Y       N       -
-Owner       LastName        text            N               N       N       -
-Owner       FirstName       text            N               N       N       -
+Owner       OwnerLast       text            N               N       N       -
+Owner       OwnerFirst      text            N               N       N       -
 
 BookGenre   BookID          integer         N               Y       Y       Book
 BookGenre   GenreID         integer         N               Y       Y       Genre
