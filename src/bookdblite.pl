@@ -6,12 +6,13 @@
 # backing type (hardcover or softcover) and more.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-04
+# Last Modified: 2015-06-05
 #
 
 use strict;
 use DBD::SQLite;
 
+my $SCHEMA_VERSION = "0.0.1";
 my $VERSION = "0.0.0-dev";
 
 my $db_loc;
@@ -92,8 +93,96 @@ sub ver_info{
 # Initializes the database at the location in db_loc
 # to a fresh database with empty tables.
 #
+# Note: This method expects the database connection to already have been established.
+#
 sub initialize_db{
+    my $export;
+    do{
+        print "Would you like to export any existing data in the table to a csv file (Y/N)? ";
+        # TODO: Read input from the user.
+    } while ($export != /[YyNn]/);
+    if ($export =~ /[Yy]/){
+        &export_data;
+    }
+    # By doing a drop and create, we can use this to update the schema
+    eval {
+        $dbh->begin_work();
+        # Drop existing tables
+        $dbh->do("DROP TABLE *");
+        # Recreate the tables.
+        # Make sure to create these in an order that allows for foreign key constraints to be applied.
+        $dbh->do("CREATE TABLE Type (
+                    TypeID integer PRIMARY KEY NOT NULL,
+                    TypeName text
+                  );");
+        $dbh->do("CREATE TABLE Book (
+                    BookID integer NOT NULL,
+                    Title text NOT NULL,
+                    Subtitle text,
+                    Year integer,
+                    TypeID integer NOT NULL,
+                    ISBN text,
+                    FOREIGN KEY TypeID REFERENCES Type(TypeID)
+                  );");
+        $dbh->do("CREATE TABLE Author (
+                    AuthorID integer PRIMARY KEY NOT NULL,
+                    AuthorLast text NOT NULL,
+                    AuthorFirst text NOT NULL,
+                    AuthorMiddle text
+                  );");
+        $dbh->do("CREATE TABLE BookAuthor (
+                    BookID integer NOT NULL,
+                    AuthorID integer NOT NULL,
+                    AuthorOrder integer,
+                    PRIMARY KEY(BookID, AuthorID),
+                    FOREIGN KEY BookID REFERENCES Book(BookID),
+                    FOREIGN KEY AuthorID REFERENCES Author(AuthorID)
+                  );");
+        $dbh->do("CREATE TABLE Genre (
+                    GenreID integer PRIMARY KEY NOT NULL,
+                    GenreName text NOT NULL
+                  );");
+        $dbh->do("CREATE TABLE BookGenre (
+                    BookID integer NOT NULL,
+                    GenreID integer NOT NULL,
+                    PRIMARY KEY (BookID, GenreID),
+                    FOREIGN KEY BookID REFERENCES Book(BookID),
+                    FOREIGN KEY GenreID REFERENCES Genre(GenreID)
+                  );");
+        $dbh->do("CREATE TABLE Owner (
+                    OwnerID integer PRIMARY KEY NOT NULL,
+                    OwnerLast text NOT NULL.
+                    OwnerFirst text NOT NULL
+                  );");
+        $dbh->do("CREATE TABLE BookOwner (
+                    BookID integer NOT NULL,
+                    OwnerID integer NOT NULL,
+                    Quantity integer NOT NULL.
+                    PRIMARY KEY (BookID, OwnerID),
+                    FOREIGN KEY BookID REFERENCES Book(BookID),
+                    FOREIGN KEY OwnerID REFERENCES Owner(OwnerID)
+                  );");
+        $dbh->do("CREATE TABLE Version(SchemaVersion text NOT NULL);");
+        
+        # Now set up some initial values
+        
+        # First we define the schema version
+        $dbh->do("INSERT INTO Version VALUES (?);", undef, $SCHEMA_VERSION);
+        
+        # Then we set the book types to hardcover and softcover
+        $dbh->do("INSERT INTO Type VALUES (?, ?);", undef, 1, "Hardcover");
+        $dbh->do("INSERT INTO Type VALUES (?, ?);", undef, 2, "Softcover");
+        
+        # Commit the transaction
+        $dbh->commit();
+    };
     
+    # If errors were encountered, the roll back and abort reset
+    if ($@){
+        print "Errors occurred while trying to initialize database.\n";
+        print "Message: $DBI::errstr.\n";
+        $dbh->rollback();
+    }
 }
 
 #
@@ -104,9 +193,11 @@ sub initialize_db{
 sub load_db{
     $dbh = DBI->connect("dbi:SQLite:dbname=$db_name","","",\%attr)
         or die ("Failed to connect to database at $db_name.");
+    # Enforce foreign keys
+    $dbh->do("PRAGMA foreign_keys = ON;");
     # TODO: Load SQLite Regex extension
     
-    # TODO: Check to see if db needs initialization. (Check for table Book or something).
+    # TODO: Check to see if db needs initialization. (Check for table Version).
 }
 
 #
