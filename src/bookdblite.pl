@@ -245,10 +245,28 @@ sub load_db{
             elsif ($row[0] > $SCHEMA_VERSION){
                 print "Your database has a schema newer than this version of this program supports.\n";
                 print "Please upgrade to a newer version to use this book database.\n";
+                $dbh->disconnect();
                 exit 1;
             }
         }
     };
+    
+    if ($@){
+        my sel;
+        print "Your database does not seem to be initialized.\n";
+        print "You must initialize the database if you wish to use it.\n";
+        do{
+            print "Would you like to initialize the database (Y/N)? ";
+            # TODO: Read input from the user
+        } while (sel != /[YyNn]/);
+        if (sel =~ /[Yy]/){
+            &initialize_db;
+        }
+        else{
+            $dbh->disconnect();
+            exit;
+        }
+    }
 }
 
 #
