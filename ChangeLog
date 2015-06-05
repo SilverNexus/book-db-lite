@@ -1,3 +1,6 @@
+2015-06-05  Daniel Hawkins
+    * doc/DB_Schema: Updated the schema to use SQLite3 data types.
+
 2015-06-04  Daniel Hawkins
     * doc/DB_Schema: Created database schema documentation.
     * full_commit.pl: Created script to combine git commit and git push steps.

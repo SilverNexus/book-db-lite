@@ -8,35 +8,35 @@
 
 Table       Field           Type            Nullable        PK      FK      FK_To_Table
 ----------------------------------------------------------------------------------------
-Book        BookID          int             N               Y       N       -
-Book        Title           varchar(30)     N               N       N       -
-Book        Subtitle        varchar(60)     Y               N       N       -
-Book        Year            shortint        Y               N       N       -
-Book        TypeID          tinyint         N               N       Y       Type
-Book        ISBN13          char(13)        Y               N       N       -
+Book        BookID          integer         N               Y       N       -
+Book        Title           text            N               N       N       -
+Book        Subtitle        text            Y               N       N       -
+Book        Year            integer         Y               N       N       -
+Book        TypeID          integer         N               N       Y       Type
+Book        ISBN13          text            Y               N       N       -
 
-BookOwner   BookID          int             N               Y       Y       Book
-BookOwner   OwnerID         int             N               Y       Y       Owner
-BookOwner   Quantity        smallint        N               N       N       -
+BookOwner   BookID          integer         N               Y       Y       Book
+BookOwner   OwnerID         integer         N               Y       Y       Owner
+BookOwner   Quantity        integer         N               N       N       -
 
-Owner       OwnerID         int             N               Y       N       -
-Owner       LastName        varchar(30)     N               N       N       -
-Owner       FirstName       varchar(30)     N               N       N       -
+Owner       OwnerID         integer         N               Y       N       -
+Owner       LastName        text            N               N       N       -
+Owner       FirstName       text            N               N       N       -
 
-BookGenre   BookID          int             N               Y       Y       Book
-BookGenre   GenreID         int             N               Y       Y       Genre
+BookGenre   BookID          integer         N               Y       Y       Book
+BookGenre   GenreID         integer         N               Y       Y       Genre
 
-Genre       GenreID         int             N               Y       N       -
-Genre       GenreName       varchar(20)     N               N       N       -
+Genre       GenreID         integer         N               Y       N       -
+Genre       GenreName       text            N               N       N       -
 
-Type        TypeID          int             N               Y       N       -
-Type        TypeName        char(9)         N               N       N       -
+Type        TypeID          integer         N               Y       N       -
+Type        TypeName        text            N               N       N       -
 
-BookAuthor  BookID          int             N               Y       Y       Book
-BookAuthor  AuthorID        int             N               Y       Y       Author
-BookAuthor  AuthorOrder     smallint        Y               N       N       -
+BookAuthor  BookID          integer         N               Y       Y       Book
+BookAuthor  AuthorID        integer         N               Y       Y       Author
+BookAuthor  AuthorOrder     integer         Y               N       N       -
 
-Author      AuthorID        int             N               Y       N       -
-Author      AuthorLast      varchar(30)     N               N       N       -
-Author      AuthorFirst     varchar(30)     N               N       N       -
-Author      AuthorMiddle    varchar(30)     N               N       N       -
+Author      AuthorID        integer         N               Y       N       -
+Author      AuthorLast      text            N               N       N       -
+Author      AuthorFirst     text            N               N       N       -
+Author      AuthorMiddle    text            N               N       N       -
