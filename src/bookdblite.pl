@@ -100,8 +100,8 @@ sub initialize_db{
     do{
         print "Would you like to export any existing data in the table to a csv file (Y/N)? ";
         # TODO: Read input from the user.
-    } while ($export != /[YyNn]/);
-    if ($export =~ /[Yy]/){
+    } while ($export != /^[YyNn]/);
+    if ($export =~ /^[Yy]/){
         &export_data;
     }
     # By doing a drop and create, we can use this to update the schema
@@ -222,8 +222,8 @@ sub load_db{
                 do{
                     print "Would you like to reinitialize the book database (Y/N)? ";
                     # TODO: Read in user input
-                } while (sel != /[YyNn]/);
-                if (sel =~ /[Yy]/){
+                } while (sel != /^[YyNn]/);
+                if (sel =~ /^[Yy]/){
                     &initialize_db;
                 }
             }
@@ -236,8 +236,8 @@ sub load_db{
                 do{
                     print "Would you like to update your database schema to a newer version (Y/N)? ";
                     # TODO: Read in user input
-                } while (sel != /[YyNn]/);
-                if (sel =~ /[Yy]/){
+                } while (sel != /^[YyNn]/);
+                if (sel =~ /^[Yy]/){
                     &initialize_db;
                 }
             }
@@ -258,8 +258,8 @@ sub load_db{
         do{
             print "Would you like to initialize the database (Y/N)? ";
             # TODO: Read input from the user
-        } while (sel != /[YyNn]/);
-        if (sel =~ /[Yy]/){
+        } while (sel != /^[YyNn]/);
+        if (sel =~ /^[Yy]/){
             &initialize_db;
         }
         else{
