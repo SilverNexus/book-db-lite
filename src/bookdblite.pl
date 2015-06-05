@@ -15,6 +15,12 @@ use DBD::SQLite;
 my $VERSION = "0.0.0-dev";
 
 my $db_loc;
+my $dbh;
+
+my %connection_attributes{
+    RaiseError => 1,
+    Autocommit => 0
+};
 
 # Parse the arguments passed to the program.
 &parse_args;
@@ -96,7 +102,11 @@ sub initialize_db{
 # Opens the database for read/write, and loads the pcre extension into the db.
 #
 sub load_db{
+    $dbh = DBI->connect("dbi:SQLite:dbname=$db_name","","",\%attr)
+        or die ("Failed to connect to database at $db_name.");
+    # TODO: Load SQLite Regex extension
     
+    # TODO: Check to see if db needs initialization. (Check for table Book or something).
 }
 
 #

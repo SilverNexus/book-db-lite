@@ -2,6 +2,7 @@
     * doc/DB_Schema: Created database schema documentation.
     * full_commit.pl: Created script to combine git commit and git push steps.
     * src/bookdblite.pl: Implemented the argument parsing mechanism.
+      Began code for loading the database.
 
 2015-06-03  Daniel Hawkins
     * INSTALL: Created Rudimentary installation instructions.
