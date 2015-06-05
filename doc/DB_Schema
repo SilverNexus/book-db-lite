@@ -3,7 +3,7 @@
 # database backend for this script.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-04
+# Last Modified: 2015-06-05
 #
 
 Table       Field           Type            Nullable        PK      FK      FK_To_Table
@@ -39,4 +39,4 @@ BookAuthor  AuthorOrder     integer         Y               N       N       -
 Author      AuthorID        integer         N               Y       N       -
 Author      AuthorLast      text            N               N       N       -
 Author      AuthorFirst     text            N               N       N       -
-Author      AuthorMiddle    text            N               N       N       -
+Author      AuthorMiddle    text            Y               N       N       -
