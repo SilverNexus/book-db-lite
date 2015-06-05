@@ -13,7 +13,7 @@ Book        Title           text            N               N       N       -
 Book        Subtitle        text            Y               N       N       -
 Book        Year            integer         Y               N       N       -
 Book        TypeID          integer         N               N       Y       Type
-Book        ISBN13          text            Y               N       N       -
+Book        ISBN            text            Y               N       N       -
 
 BookOwner   BookID          integer         N               Y       Y       Book
 BookOwner   OwnerID         integer         N               Y       Y       Owner
