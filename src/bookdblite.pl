@@ -163,16 +163,16 @@ sub initialize_db{
                     FOREIGN KEY OwnerID REFERENCES Owner(OwnerID)
                   );");
         $dbh->do("CREATE TABLE Version(SchemaVersion text NOT NULL);");
-        
+
         # Now set up some initial values
-        
+
         # First we define the schema version
         $dbh->do("INSERT INTO Version VALUES (?);", undef, $SCHEMA_VERSION);
-        
+
         # Then we set the book types to hardcover and softcover
         $dbh->do("INSERT INTO Type VALUES (?, ?);", undef, 1, "Hardcover");
         $dbh->do("INSERT INTO Type VALUES (?, ?);", undef, 2, "Softcover");
-        
+
         # Commit the transaction
         $dbh->commit();
     };
@@ -183,6 +183,18 @@ sub initialize_db{
         print "Message: $DBI::errstr.\n";
         $dbh->rollback();
     }
+}
+
+#
+# export_data
+#
+# Exports the data in the database to a csv file.
+# This allows for the data to either be imported into another application or
+# transformed to a newer version of this program's schema.
+# If nothing else, it allows for the data to be backed up in case of upgrade failure.
+#
+sub export_data{
+    # TODO: Implement
 }
 
 #
