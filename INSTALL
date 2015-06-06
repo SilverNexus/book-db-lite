@@ -2,8 +2,11 @@ Installation Instructions
 -------------------------
 
 Dependencies:
-    A Perl 5 interpreter
-    Package DBD::SQLite3 (provided by libdbd-sqlite3-perl on Debian systems)
+    - A Perl 5 interpreter
+    - Package DBD::SQLite3 (provided by libdbd-sqlite3-perl on Debian systems)
+    - sqlite3-pcre (available in many distro repositories, if not, go to
+        https://github.com/ralight/sqlite3-pcre and download it. Run 'make'
+        and 'sudo make install' on the unzipped version of it.
 
 To install to the system path:
     Run the install script in install_linux.sh or install_win.bat,
