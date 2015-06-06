@@ -349,6 +349,9 @@ sub remove_book{
 # Allows the user to query the database for information.
 # It will provide the option to export the results to a csv file.
 #
+# NOTE: The export feature for the query results is not designed to be
+# used as a database backup. It loses the database structure in it's results.
+#
 sub query{
     # TODO: Implement
 }
