@@ -364,7 +364,7 @@ sub add_book{
         $sel = <STDIN>;
         # Make sure the selection is valid.
         foreach $element (@opts){
-            $valid = 1 if $sel =~ $element;
+            $valid = 1 if ($sel =~ $element);
         }
     } while ($valid eq 0);
     $bookdata{"Book.TypeID"} = $sel;
