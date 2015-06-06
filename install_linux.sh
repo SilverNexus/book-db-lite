@@ -25,5 +25,5 @@ if [ $? != 0 ]; then
     echo "Are you running as root?"
     exit
 fi
-# Add a link so we can run with or with file extension
+# Add a link so we can run with or without file extension
 ln -s /usr/local/bin/bookdblite.pl /usr/local/bin/bookdblite
