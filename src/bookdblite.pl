@@ -31,6 +31,9 @@ my %connection_attributes{
 
 &main_menu;
 
+# Close the database connection. All non-temrinating code paths should leave it open up to here.
+$dbh->disconnect();
+
 #
 # Functions
 #
