@@ -203,13 +203,25 @@ sub export_data{
 # Opens the database for read/write, and loads the pcre extension into the db.
 #
 sub load_db{
+    my $pcre_loc;
+    # Try to open the file -- it should have been created from the install script
+    my $loc_file = open(PCRE, "< ../etc/bookdblite_pcre_loc")
+        || die ("Could not find file that tells where pcre library is located.");
+    # Theoretically, there should only be one line in this file
+    # If there's more, let's just use the first only.
+    $pcre_loc = <PCRE>;
+    # Close the file
+    close(<PCRE>);
+    # Remove trailing whitespace (there's at least a newline)
+    chomp($pcre_loc);
+    # Now we can load the database
     $dbh = DBI->connect("dbi:SQLite:dbname=$db_loc","","",\%attr)
         or die ("Failed to connect to database at $db_loc.");
     # Enforce foreign keys
     $dbh->do("PRAGMA foreign_keys = ON;");
-    # TODO: Load SQLite Regex extension
-    
-    # TODO: Check to see if db needs initialization. (Check for table Version).
+    # Load SQLite Regex extension
+    $dbh->do("SELECT load_extension('$pcre_loc');");
+    # Check to see if db needs initialization. (Check for table Version).
     eval{
         my $vth = $dbh->prepare("SELECT SchemaVersion FROM Version;");
         my $result = $vth->execute();

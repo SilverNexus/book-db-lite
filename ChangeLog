@@ -3,6 +3,8 @@
       Also added a Version table for keeping track of the schema version.
     * src/bookdblite.pl: Implemented database initialization.
       Implemented database sanity and version checks for database load.
+      Implemented loading of sqlite3-pcre. Designed such that it should
+      work unmodified for both Windows and Linux.
     * install_linux.sh: Add check for sqlite3-pcre.
 
 2015-06-04  Daniel Hawkins
