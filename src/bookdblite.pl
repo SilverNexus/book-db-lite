@@ -330,7 +330,46 @@ sub main_menu{
 # adds records to the appropriate table(s).
 #
 sub add_book{
-    # TODO: Implement
+    # Store the book's data in a hashtable while we are gathering it.
+    my %bookdata;
+    # Start by gathering required information.
+    print "Author's last name (first author if multiple authors): ";
+    $bookdata{"Author.AuthorLast"} = <STDIN>;
+    print "Author's first name: ";
+    $bookdata{"Author.AuthorFirst"} = <STDIN>;
+    print "Title of Book: ";
+    $bookdata{"Book.Title"} = <STDIN>;
+    # Query the database for book types
+    eval {
+        my $vth = $dbh->prepare("SELECT TypeID, TypeName FROM Type");
+        $vth->execute();
+    };
+    # If we failed to fetch the type data, exit.
+    if ($@){
+        print "Failed to collect binding types, exiting.\n";
+        $dbh->disconnect();
+        exit 1;
+    }
+    print "Choose a book binding: "
+    # Store the valid IDs in an array
+    my @opts;
+    while (my @row = $vth->fetchrow_array()){
+        print "  $row[0]. $row[1]\n";
+        push(@opts, $row[0]);
+    }
+    my $sel;
+    my $valid = 0;
+    do{
+        print "Enter your selection: ";
+        $sel = <STDIN>;
+        # Make sure the selection is valid.
+        foreach $element (@opts){
+            $valid = 1 if $sel =~ $element;
+        }
+    } while ($valid eq 0);
+    $bookdata{"Book.TypeID"} = $sel;
+    
+    # TODO: Finish implementation
 }
 
 #

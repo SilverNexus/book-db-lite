@@ -3,6 +3,7 @@
       Extracted yes/no prompts to use a common mechanism.
       Built decision structure to handle main menu.
       Updated the database initialization to include OwnerMiddle.
+      Began implementation of main menu operations.
     * doc/DB_Schema: Add nullable field OwnerMiddle to Owner table.
 
 2015-06-05  Daniel Hawkins
