@@ -210,18 +210,6 @@ sub initialize_db{
 }
 
 #
-# export_data
-#
-# Exports the data in the database to a csv file.
-# This allows for the data to either be imported into another application or
-# transformed to a newer version of this program's schema.
-# If nothing else, it allows for the data to be backed up in case of upgrade failure.
-#
-sub export_data{
-    # TODO: Implement
-}
-
-#
 # load_db
 #
 # Opens the database for read/write, and loads the pcre extension into the db.
@@ -316,19 +304,73 @@ sub main_menu{
         # Remove trailing newline
         chomp($selection);
         if ($selection =~ "1"){
-            # TODO: Write function for adding a book
+            &add_book;
         }
         elsif ($selection =~ "2"){
-            # TODO: Write function for removing a book
+            &remove_book;
         }
         elsif ($selection =~ "3"){
-            # TODO: Write function to query the database
+            &query;
         }
         elsif ($selection =~ "4"){
-            # TODO: Write function to import data from csv file
+            &import_csv;
         }
         elsif ($selection =~ "5"){
             &export_data;
         }
     }
+}
+
+#
+# add_book
+#
+# Prompts the user to input required information,
+# then gives the option to add additional information.
+# When the user has supplied all desired data,
+# adds records to the appropriate table(s).
+#
+sub add_book{
+    # TODO: Implement
+}
+
+#
+# remove_book
+#
+# Prompts the user to select a book to remove from the database.
+# Removes the book and all references in the bridge tables.
+#
+sub remove_book{
+    # TODO: Implement
+}
+
+#
+# query
+#
+# Allows the user to query the database for information.
+# It will provide the option to export the results to a csv file.
+#
+sub query{
+    # TODO: Implement
+}
+
+#
+# import_csv
+#
+# Allows for a set of csv files from an export of the database to be imported
+# into the database. Integral to database schema upgrades.
+#
+sub import_csv{
+    # TODO: Implement
+}
+
+#
+# export_data
+#
+# Exports the data in the database to a csv file.
+# This allows for the data to either be imported into another application or
+# transformed to a newer version of this program's schema.
+# If nothing else, it allows for the data to be backed up in case of upgrade failure.
+#
+sub export_data{
+    # TODO: Implement
 }
