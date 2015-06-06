@@ -9,8 +9,9 @@ Dependencies:
         and 'sudo make install' on the unzipped version of it.
 
 To install to the system path:
-    Run the install script in install_linux.sh or install_win.bat,
-    depending on your operating system.
+    - Ensure you have met all dependency requirements.
+    - Run the install script in install_linux.sh or install_win.bat,
+      depending on your operating system.
 
 To run:
     Type bookdblite in the command-line. It should then run as expected.
