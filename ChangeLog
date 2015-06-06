@@ -1,3 +1,8 @@
+2015-06-06  Daniel Hawkins
+    * src/bookdblite.pl: Implemented reading from keyboard.
+      Extracted yes/no prompts to use a common mechanism.
+      Built decision structure to handle main menu.
+
 2015-06-05  Daniel Hawkins
     * doc/DB_Schema: Updated the schema to use SQLite3 data types.
       Also added a Version table for keeping track of the schema version.

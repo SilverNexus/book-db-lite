@@ -6,7 +6,7 @@
 # backing type (hardcover or softcover) and more.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-05
+# Last Modified: 2015-06-06
 #
 
 use strict;
@@ -37,6 +37,30 @@ $dbh->disconnect();
 #
 # Functions
 #
+
+#
+# yes_no_prompt
+#
+# Provides a consistent mechanism to give the user yes/no prompts.
+#
+# @param message The message to prompt the user with.
+# Should be formatted as the user should see it.
+#
+# @return y or Y if yes, n or N if no
+#
+sub yes_no_prompt{
+    if ($#_ ne 1){
+        # Make sure to close the DB connection before terminating
+        $dbh->disconnect();
+        die("yes_no_prompt called with wrong number of parameters!\nExpected 1, got $#_.");
+    }
+    my $val;
+    do{
+        print "$_[0]";
+        $val = <STDIN>;
+    } while ($val != /^[YyNn]/);
+    return $val;
+}
 
 #
 # parse_args
@@ -99,11 +123,7 @@ sub ver_info{
 # Note: This method expects the database connection to already have been established.
 #
 sub initialize_db{
-    my $export;
-    do{
-        print "Would you like to export any existing data in the table to a csv file (Y/N)? ";
-        # TODO: Read input from the user.
-    } while ($export != /^[YyNn]/);
+    my $export = yes_no_prompt("Would you like to export any existing data in the table to a csv file (Y/N)? ");
     if ($export =~ /^[Yy]/){
         &export_data;
     }
@@ -232,27 +252,19 @@ sub load_db{
         while (my @row = $vth->fetchrow_array()){
             # If multiple rows in version, something's not right.
             if (++$rownum gt 1){
-                my sel;
                 print "Database $db_loc appears to be malformed.\n";
-                do{
-                    print "Would you like to reinitialize the book database (Y/N)? ";
-                    # TODO: Read in user input
-                } while (sel != /^[YyNn]/);
-                if (sel =~ /^[Yy]/){
+                my $sel = yes_no_prompt("Would you like to reinitialize the book database (Y/N)? ");
+                if ($sel =~ /^[Yy]/){
                     &initialize_db;
                 }
             }
             # If schema version is too old, ask to update.
             elsif ($row[0] < $SCHEMA_VERSION){
-                my sel;
                 print "Your book database may be out of date.\n";
                 print "New versions of the database provide addtional features and optimizations.\n";
                 print "Declining the upgrade will not affect program operation.\n";
-                do{
-                    print "Would you like to update your database schema to a newer version (Y/N)? ";
-                    # TODO: Read in user input
-                } while (sel != /^[YyNn]/);
-                if (sel =~ /^[Yy]/){
+                my $sel = yes_no_prompt("Would you like to update your database schema to a newer version (Y/N)? ");
+                if ($sel =~ /^[Yy]/){
                     &initialize_db;
                 }
             }
@@ -267,14 +279,10 @@ sub load_db{
     };
     
     if ($@){
-        my sel;
         print "Your database does not seem to be initialized.\n";
         print "You must initialize the database if you wish to use it.\n";
-        do{
-            print "Would you like to initialize the database (Y/N)? ";
-            # TODO: Read input from the user
-        } while (sel != /^[YyNn]/);
-        if (sel =~ /^[Yy]/){
+        my $sel = yes_no_prompt("Would you like to initialize the database (Y/N)? ");
+        if ($sel =~ /^[Yy]/){
             &initialize_db;
         }
         else{
@@ -293,17 +301,33 @@ sub load_db{
 sub main_menu{
     my $selection = "0";
     # The main menu will repeat until we exit
-    while ($selection != "4"){
+    while ($selection != "6"){
         print "Main Menu\n";
         print " 1. Add a Book\n";
         print " 2. Remove a Book\n";
         print " 3. Perform a Query\n";
-        print " 4. Exit\n";
+        print " 4. Import Data from CSV\n";
+        print " 5. Export Data to CSV\n";
+        print " 6. Exit\n";
         print "\nEnter your selection: ";
-        # read selection;
-        
-        # This is temporary so we don't get an infinite loop
-        $selection = "4"
+        # read selection from keyboard
+        $selection = <STDIN>;
+        # Remove trailing newline
+        chomp($selection);
+        if ($selection =~ "1"){
+            # TODO: Write function for adding a book
+        }
+        elsif ($selection =~ "2"){
+            # TODO: Write function for removing a book
+        }
+        elsif ($selection =~ "3"){
+            # TODO: Write function to query the database
+        }
+        elsif ($selection =~ "4"){
+            # TODO: Write function to import data from csv file
+        }
+        elsif ($selection =~ "5"){
+            &export_data;
+        }
     }
-    exit;
 }
