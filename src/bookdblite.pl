@@ -175,7 +175,8 @@ sub initialize_db{
         $dbh->do("CREATE TABLE Owner (
                     OwnerID integer PRIMARY KEY NOT NULL,
                     OwnerLast text NOT NULL.
-                    OwnerFirst text NOT NULL
+                    OwnerFirst text NOT NULL,
+                    OwnerMiddle text
                   );");
         $dbh->do("CREATE TABLE BookOwner (
                     BookID integer NOT NULL,

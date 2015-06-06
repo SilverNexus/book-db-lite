@@ -3,7 +3,7 @@
 # database backend for this script.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-05
+# Last Modified: 2015-06-06
 #
 
 Table       Field           Type            Nullable        PK      FK      FK_To_Table
@@ -22,6 +22,7 @@ BookOwner   Quantity        integer         N               N       N       -
 Owner       OwnerID         integer         N               Y       N       -
 Owner       OwnerLast       text            N               N       N       -
 Owner       OwnerFirst      text            N               N       N       -
+Owner       OwnerMiddle     text            Y               N       N       -
 
 BookGenre   BookID          integer         N               Y       Y       Book
 BookGenre   GenreID         integer         N               Y       Y       Genre
