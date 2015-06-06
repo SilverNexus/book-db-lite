@@ -18,10 +18,10 @@ my $VERSION = "0.0.0-dev";
 my $db_loc;
 my $dbh;
 
-my %connection_attributes{
+my %attr = (
     RaiseError => 1,
     Autocommit => 0
-};
+);
 
 # Parse the arguments passed to the program.
 &parse_args;
@@ -234,7 +234,7 @@ sub load_db{
     # If there's more, let's just use the first only.
     $pcre_loc = <PCRE>;
     # Close the file
-    close(<PCRE>);
+    close(PCRE);
     # Remove trailing whitespace (there's at least a newline)
     chomp($pcre_loc);
     # Now we can load the database
