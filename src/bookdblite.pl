@@ -499,5 +499,12 @@ sub import_csv{
 # If nothing else, it allows for the data to be backed up in case of upgrade failure.
 #
 sub export_data{
-    # TODO: Implement
+    # TODO: Create a folder for the exported csv files to be stored
+    
+    # TODO: For each table in the database, SELECT all data.
+    
+    # TODO: Print a field name row to the csv file.
+    
+    # TODO: Output each row of the table to its corresponding csv file.
+    
 }
