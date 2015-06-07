@@ -571,9 +571,31 @@ sub remove_book{
                         ++$index;
                     }
                 }
+                # Set resultcount to be the new size of the results;
+                $resultcount = $#ids;
             }
-            # TODO: Check for multiple owners of the book and allow for choice
-            # of removing any or all owned copies.
+            # If only one unique id, we are redundant in this comparison.
+            # Its just easier to code it this way.
+            if ($resultcount gt 1){
+                # Check for multiple owners of the book and allow for choice
+                # of removing any or all owned copies.
+                print "Multiple owners of $title exist. Choose any to remove book from.\n";
+                print "Owners of $title:\n";
+                my $index = 0;
+                # Fetch the owner and type information from all remaining results.
+                while ($index lt $#ids){
+                    print "  " + ($index + 1) + ". $firstnames[$index] ";
+                    print "$middlenames[$index] " if $middlenames[$index];
+                    print "$lastnames[$index]: $quantities[$index] $types[$index]\n";
+                }
+                # Give the user a chance to choose.
+                do {
+                    print "Enter your selection: ";
+                    my $sel = <STDIN>;
+                } while ($sel lt 1 || $sel gt $#ids);
+                # TODO: Finish owner check implementation
+                
+            }
         }
         
         # TODO: Check to see if there are multiple copies owned of the book in database.
