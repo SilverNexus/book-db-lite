@@ -340,8 +340,9 @@ sub add_book{
     print "Title of Book: ";
     $bookdata{"Book.Title"} = <STDIN>;
     # Query the database for book types
+    my $vth;
     eval {
-        my $vth = $dbh->prepare("SELECT TypeID, TypeName FROM Type");
+        $vth = $dbh->prepare("SELECT TypeID, TypeName FROM Type");
         $vth->execute();
     };
     # If we failed to fetch the type data, exit.
@@ -350,7 +351,7 @@ sub add_book{
         $dbh->disconnect();
         exit 1;
     }
-    print "Choose a book binding: "
+    print "Choose a book binding: ";
     # Store the valid IDs in an array
     my @opts;
     while (my @row = $vth->fetchrow_array()){
@@ -364,7 +365,7 @@ sub add_book{
         print "Enter your selection: ";
         $sel = <STDIN>;
         # Make sure the selection is valid.
-        foreach $element (@opts){
+        foreach my $element (@opts){
             $valid = 1 if ($sel =~ $element);
         }
     } while ($valid eq 0);
@@ -391,8 +392,8 @@ sub add_book{
     eval{
         # TODO: Make this handle multiple authors in a book
         # TODO: Make this handle a specified middle name for author
-        my $vth = $dbh->prepare(
-            "SELECT AuthorID, AuthorFirst, AuthorMiddle, AuthorLast FROM Author "
+        my $vth = $dbh->do(
+            "SELECT AuthorID, AuthorFirst, AuthorMiddle, AuthorLast FROM Author " +
             "WHERE AuthorFirst=? AND AuthorLast=?;", undef,
             $bookdata{'Author.AuthorFirst'}, $bookdata{'Author.AuthorLast'}
         );
@@ -413,22 +414,22 @@ sub add_book{
         if ($resultcount gt 1){
             # If more than one result, prompt the user to choose an author.
             print "More than one author matches name $bookdata{'Author.AuthorFirst'}, $bookdata{'Author.AuthorLast'}!\n";
-            print "Please select one of the following options:"
+            print "Please select one of the following options:";
             # Since we have more than one row, we can check for more rows at the end
-            $my index = 0;
+            my $index = 0;
             do{
-                print "  "($index + 1)". $firstnames[index] "
-                print "$middlenames[index] " if ($middlenames[index]);
-                print "$lastnames[index]\n";
+                print "  "+ ($index + 1) + ". $firstnames[$index] ";
+                print "$middlenames[$index] " if ($middlenames[$index]);
+                print "$lastnames[$index]\n";
             } while (++$index < $resultcount);
             # Give the option to add a new author
-            print "  "($index + 1)". Add as a new author\n";
+            print "  " + ($index + 1) + ". Add as a new author\n";
             # Give the user a selection prompt
             do{
-                print "Enter your selection: "
+                print "Enter your selection: ";
                 my $sel = <STDIN>;
                 chomp($sel);
-            } while ($sel < "1" || $sel > ""($index + 1)"");
+            } while ($sel < "1" || $sel > "" + ($index + 1) + "");
             # Then find the appropriate author and store the ID.
             # If we are adding a new author, do not store an ID.
             if (--$sel < $resultcount){
