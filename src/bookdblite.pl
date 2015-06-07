@@ -479,7 +479,15 @@ sub remove_book{
             "WHERE Title=?", undef, $title);
         $vth->execute();
         # Declare structures to store the results
-        my @ids, @titles, @subtitles, @types, @ownerids, @firstnames, @middlenames, @lastnames, @quantities;
+        my @ids;
+        my @titles;
+        my @subtitles;
+        my @types;
+        my @ownerids;
+        my @firstnames;
+        my @middlenames;
+        my @lastnames;
+        my @quantities;
         my $resultcount = 0;
         # Store the results of the query.
         while (my @row = $vth->fetchrow_array()){
@@ -488,14 +496,22 @@ sub remove_book{
             push(@titles, $row[1]);
             push(@subtitles, $row[2]);
             push(@types, $row[3]);
-            push(@owenrids, $row[4]);
+            push(@ownerids, $row[4]);
             push(@firstnames, $row[5]);
             push(@middlenames, $row[6]);
             push(@lastnames, $row[7]);
             push(@quantities, $row[8]);
         }
         # Declare the variables to store in when we have narrowed down to one
-        my $r_id, $r_title, $r_subtitle, $r_type, $r_oid, $r_fname, $r_mname, $r_lname, $r_qty;
+        my $r_id;
+        my $r_title;
+        my $r_subtitle;
+        my $r_type;
+        my $r_oid;
+        my $r_fname;
+        my $r_mname;
+        my $r_lname;
+        my $r_qty;
         # If no results, then return to main menu.
         if ($resultcount eq 0){
             print "There are no books in the database matching that title.\n";
@@ -541,7 +557,7 @@ sub remove_book{
                     # Remove the trailing ", "
                     substr($authorlist, 0, -2);
                     # Map the menu option to the book's id.
-                    %options{"$optionnum"} = $curid;
+                    $options{"$optionnum"} = $curid;
                     # Print the option.
                     print "  $optionnum. $title by $authorlist\n";
                 }
@@ -593,9 +609,10 @@ sub remove_book{
                     print "$lastnames[$index]: $quantities[$index] $types[$index]\n";
                 }
                 # Give the user a chance to choose.
+                my $sel;
                 do {
                     print "Enter your selection: ";
-                    my $sel = <STDIN>;
+                    $sel = <STDIN>;
                 } while ($sel lt 1 || $sel gt $#ids);
                 # Fix the option to point to the index, not the menu option
                 --$sel;
@@ -629,9 +646,10 @@ sub remove_book{
         # If there is more than one copy in the selected owner, give the option to remove only part.
         if ($r_qty gt 1){
             # Tell the user they can remove any number of copies from the owner.
+            my $num;
             do{
                 print "How many copies would you like to remove (Max $r_qty)? ";
-                my $num = <STDIN>;
+                $num = <STDIN>;
             } while ($num lt 0 || $num gt $r_qty);
             # If user chose zero, they had second thoughts about removing the book
             if ($num eq 0){
