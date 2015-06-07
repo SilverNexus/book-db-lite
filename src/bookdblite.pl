@@ -6,7 +6,7 @@
 # backing type (hardcover or softcover) and more.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-06
+# Last Modified: 2015-06-07
 #
 
 use strict;
@@ -472,14 +472,14 @@ sub remove_book{
     # Check to see if the book is in the database.
     eval {
         my $vth = $dbh->prepare("SELECT BookID, Title, Subtitle, TypeName, " + 
-            "OwnerFirst, OwnerMiddle, OwnerLast, Quantity " +
+            "OwnerID, OwnerFirst, OwnerMiddle, OwnerLast, Quantity " +
             "FROM Book JOIN Type ON Book.TypeID = Type.TypeID " +
             "JOIN BookOwner ON Book.BookID = BookOwner.BookID " +
             "JOIN Owner ON BookOwner.OwnerID = Owner.OwnerID " +
             "WHERE Title=?", undef, $title);
         $vth->execute();
         # Declare structures to store the results
-        my @ids, @titles, @subtitles, @types, @firstnames, @middlenames, @lastnames, @quantities;
+        my @ids, @titles, @subtitles, @types, @ownerids, @firstnames, @middlenames, @lastnames, @quantities;
         my $resultcount = 0;
         # Store the results of the query.
         while (my @row = $vth->fetchrow_array()){
@@ -488,11 +488,14 @@ sub remove_book{
             push(@titles, $row[1]);
             push(@subtitles, $row[2]);
             push(@types, $row[3]);
-            push(@firstnames, $row[4]);
-            push(@middlenames, $row[5]);
-            push(@lastnames, $row[6]);
-            push(@quantities, $row[7]);
+            push(@owenrids, $row[4]);
+            push(@firstnames, $row[5]);
+            push(@middlenames, $row[6]);
+            push(@lastnames, $row[7]);
+            push(@quantities, $row[8]);
         }
+        # Declare the variables to store in when we have narrowed down to one
+        my $r_id, $r_title, $r_subtitle, $r_type, $r_oid, $r_fname, $r_mname, $r_lname, $r_qty;
         # If no results, then return to main menu.
         if ($resultcount eq 0){
             print "There are no books in the database matching that title.\n";
@@ -559,6 +562,7 @@ sub remove_book{
                         splice(@ids, $index, 1);
                         splice(@titles, $index, 1);
                         splice(@subtitles, $index, 1);
+                        splice(@ownerids, $index, 1);
                         splice(@firstnames, $index, 1);
                         splice(@middlenames, $index, 1);
                         splice(@lastnames, $index, 1);
@@ -593,12 +597,62 @@ sub remove_book{
                     print "Enter your selection: ";
                     my $sel = <STDIN>;
                 } while ($sel lt 1 || $sel gt $#ids);
-                # TODO: Finish owner check implementation
+                # Fix the option to point to the index, not the menu option
+                --$sel;
+                # Pass the selected option to the scalars.
+                $r_id = $ids[$sel];
+                $r_title = $titles[$sel];
+                $r_subtitle = $subtitles[$sel];
+                $r_type = $types[$sel];
+                $r_oid = $ownerids[$sel];
+                $r_fname = $firstnames[$sel];
+                $r_mname = $middlenames[$sel];
+                $r_lname = $lastnames[$sel];
+                $r_qty = $quantities[$sel];
                 
             }
         }
+        # If one result, just move the values over to the scalars.
+        else{
+            $r_id = $ids[0];
+            $r_title = $titles[0];
+            $r_subtitle = $subtitles[0];
+            $r_type = $types[0];
+            $r_oid = $ownerids[0];
+            $r_fname = $firstnames[0];
+            $r_mname = $middlenames[0];
+            $r_lname = $lastnames[0];
+            $r_qty = $quantities[0];
+        }
         
-        # TODO: Check to see if there are multiple copies owned of the book in database.
+        # Check to see if there are multiple copies owned of the book in database.
+        # If there is more than one copy in the selected owner, give the option to remove only part.
+        if ($r_qty gt 1){
+            # Tell the user they can remove any number of copies from the owner.
+            do{
+                print "How many copies would you like to remove (Max $r_qty)? ";
+                my $num = <STDIN>;
+            } while ($num lt 0 || $num gt $r_qty);
+            # If user chose zero, they had second thoughts about removing the book
+            if ($num eq 0){
+                return;
+            }
+            # If we remove less than the quantity, then don't remove the BookOwner record.
+            if ($num lt $r_qty){
+                $dbh->do("UPDATE BookOwner SET Quantity = ? WHERE BookID = ? AND OwnerID = ?;",
+                    undef, $r_qty - $num, $r_id, $r_oid);
+            }
+            # Otherwise, remove the BookOwner record.
+            else{
+                $dbh->do("DELETE FROM BookOwner WHERE BookID = ? AND OwnerID = ?;",
+                    undef, $r_id, $r_oid);
+            }
+        }
+        # Otherwise, just remove the copy of the book from owner.
+        else{
+            $dbh->do("DELETE FROM BookOwner WHERE BookID = ? AND OwnerID = ?;",
+                undef, $r_id, $r_oid);
+        }
     };
     # If we encountered errors, bail out of the program.
     if ($@){
@@ -606,7 +660,6 @@ sub remove_book{
         $dbh->disconnect();
         exit 1;
     }
-    # TODO: Implement
 }
 
 #
