@@ -465,6 +465,23 @@ sub add_book{
 # Removes the book and all references in the bridge tables.
 #
 sub remove_book{
+    # Prompt the user for the book title
+    print "What is the title of the book to remove? ";
+    my $title = <STDIN>;
+    # Check to see if the book is in the database.
+    eval {
+        my $vth = $dbh->prepare("SELECT BookID, Title, Subtitle, TypeName, " + 
+            "OwnerFirst, OwnerMiddle, OwnerLast, Quantity " +
+            "FROM Book JOIN Type ON Book.TypeID = Type.TypeID " +
+            "JOIN BookOwner ON Book.BookID = BookOwner.BookID " +
+            "JOIN Owner ON BookOwner.OwnerID = Owner.OwnerID " +
+            "WHERE Title=?", undef, $title);
+        $vth->execute();
+        
+        # TODO: Check to see if there are multiple books returned
+        
+        # TODO: Check to see if there are multiple copies of the book in database.
+    };
     # TODO: Implement
 }
 
