@@ -288,9 +288,9 @@ sub load_db{
 # Directs the user to the correct function given their selection.
 #
 sub main_menu{
-    my $selection = "0";
+    my $selection;
     # The main menu will repeat until we exit
-    while ($selection != "6"){
+    do{
         print "Main Menu\n";
         print " 1. Add a Book\n";
         print " 2. Remove a Book\n";
@@ -318,7 +318,7 @@ sub main_menu{
         elsif ($selection =~ "5"){
             &export_data;
         }
-    }
+    } while ($selection != "6");
 }
 
 #
