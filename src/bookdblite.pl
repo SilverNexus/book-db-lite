@@ -671,10 +671,13 @@ sub remove_book{
             $dbh->do("DELETE FROM BookOwner WHERE BookID = ? AND OwnerID = ?;",
                 undef, $r_id, $r_oid);
         }
+        # Don't forget to commit the changes.
+        $dbh->commit();
     };
     # If we encountered errors, bail out of the program.
     if ($@){
         print "An error occurred accessing $db_loc, terminating.\n";
+        $dbh->rollback();
         $dbh->disconnect();
         exit 1;
     }
@@ -712,12 +715,42 @@ sub import_csv{
 # If nothing else, it allows for the data to be backed up in case of upgrade failure.
 #
 sub export_data{
-    # TODO: Create a folder for the exported csv files to be stored
+    # Find the last slash in $db_loc
+    my $last_slash = rindex($db_loc, "/");
+    my $export_loc;
+    # if there's a slash, keep the stuff before the slash so we put the
+    # export in the same directory as the database.
+    if ($last_slash ge 0){
+        $export_loc = substr($db_loc, 0, $last_slash);
+    }
+    # If there's no slash, then we just plop the export in the current directory.
+    else{
+        $export_loc = "";
+    }
+    # Either way, we put the results in a folder called export
+    $export_loc += "export";
+        
+    # Create a folder for the exported csv files to be stored if it does not exist.
+    unless -d $export_loc{
+        unless (mkdir $export_loc){
+            print "Failed to export database data: non-directory named 'export' already exists.\n";
+            # Since we can call this from the pre-menu upgrade system, its safer to just bail
+            # until I implement a better method to notify the caller of failure.
+            $dbh->disconnect();
+            exit 1;
+        }
+    }
     
-    # TODO: For each table in the database, SELECT all data.
-    
-    # TODO: Print a field name row to the csv file.
-    
-    # TODO: Output each row of the table to its corresponding csv file.
+    # For each table in the database, SELECT all data.
+    eval{
+        my @tables;
+        my $vth = $dbh->prepare("SELECT * FROM sqlite_master WHERE type='table';");
+        $vth->execute();
+        # TODO: Parse the results of the query.
+        
+        # TODO: Print a field name row to the csv file.
+        
+        # TODO: Output each row of the table to its corresponding csv file.
+    };
     
 }
