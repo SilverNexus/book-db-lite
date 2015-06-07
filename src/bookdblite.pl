@@ -744,9 +744,13 @@ sub export_data{
     # For each table in the database, SELECT all data.
     eval{
         my @tables;
-        my $vth = $dbh->prepare("SELECT * FROM sqlite_master WHERE type='table';");
+        my $vth = $dbh->prepare("SELECT name FROM sqlite_master WHERE type='table';");
         $vth->execute();
-        # TODO: Parse the results of the query.
+        # Parse the results of the query.
+        while (@row = $vth->fetchrow_array()){
+            push(@tables, $row[0]);
+        }
+        # TODO: Get the column names for each table.
         
         # TODO: Print a field name row to the csv file.
         
