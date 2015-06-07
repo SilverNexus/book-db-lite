@@ -359,6 +359,7 @@ sub add_book{
     }
     my $sel;
     my $valid = 0;
+    # Prompt the user to pick one of the types available.
     do{
         print "Enter your selection: ";
         $sel = <STDIN>;
@@ -368,6 +369,90 @@ sub add_book{
         }
     } while ($valid eq 0);
     $bookdata{"Book.TypeID"} = $sel;
+    # Prompt the user for an owner.
+    print "Owner's last name: ";
+    $bookdata{"Owner.OwnerLast"} = <STDIN>;
+    print "Owner's first name: ";
+    $bookdata{"Owner.OwnerFirst"} = <STDIN>;
+    # Give the entered data back to the user.
+    print "Book: $bookdata{'Book.Title'}\n";
+    print "Author: $bookdata{'Author.AuthorFirst'} $bookdata{'Author.AuthorLast'}\n";
+    print "Owner: $bookdata{'Owner.OwnerFirst'} $bookdata{'Owner.OwnerLast'}\n\n";
+    # Ask the user if he/she would like to add more data to the entry
+    my $more = yes_no_prompt("Would you like to add more data to the entry (Y/N)? ");
+    while ($more =~ /[Yy]/){
+        # TODO: Implement additional data field entry system.
+        
+        # This is temporary to prevent an infinite loop
+        $more = "n";
+    }
+    # Some sanity checks to ensure accurate entry
+    # First, make sure no more than one author matches the author name
+    eval{
+        # TODO: Make this handle multiple authors in a book
+        # TODO: Make this handle a specified middle name for author
+        my $vth = $dbh->prepare(
+            "SELECT AuthorID, AuthorFirst, AuthorMiddle, AuthorLast FROM Author "
+            "WHERE AuthorFirst=? AND AuthorLast=?;", undef,
+            $bookdata{'Author.AuthorFirst'}, $bookdata{'Author.AuthorLast'}
+        );
+        $vth->execute();
+        my $resultcount = 0;
+        my @ids;
+        my @firstnames;
+        my @middlenames;
+        my @lastnames;
+        while (my @row = $vth->fetchrow_array()){
+            ++$resultcount;
+            push(@ids, $row[0]);
+            push(@firstnames, $row[1]);
+            push(@middlenames, $row[2]);
+            push(@lastnames, $row[3]);
+        }
+        # Now that we have all the data, check for the right values.
+        if ($resultcount gt 1){
+            # If more than one result, prompt the user to choose an author.
+            print "More than one author matches name $bookdata{'Author.AuthorFirst'}, $bookdata{'Author.AuthorLast'}!\n";
+            print "Please select one of the following options:"
+            # Since we have more than one row, we can check for more rows at the end
+            $my index = 0;
+            do{
+                print "  "($index + 1)". $firstnames[index] "
+                print "$middlenames[index] " if ($middlenames[index]);
+                print "$lastnames[index]\n";
+            } while (++$index < $resultcount);
+            # Give the option to add a new author
+            print "  "($index + 1)". Add as a new author\n";
+            # Give the user a selection prompt
+            do{
+                print "Enter your selection: "
+                my $sel = <STDIN>;
+                chomp($sel);
+            } while ($sel < "1" || $sel > ""($index + 1)"");
+            # Then find the appropriate author and store the ID.
+            # If we are adding a new author, do not store an ID.
+            if (--$sel < $resultcount){
+                $bookdata{"Author.AuthorID"} = $ids[$sel];
+                # We no longer need author first and last, so unset them
+                delete $bookdata{"Author.AuthorLast"};
+                delete $bookdata{"Author.AuthorFirst"};
+            }
+        }
+        # If we have one match, then that is the one we use.
+        elsif ($resultcount eq 1){
+            $bookdata{"Author.AuthorID"} = $ids[0];
+            # We no longer need author first and last, so unset them
+            delete $bookdata{"Author.AuthorLast"};
+            delete $bookdata{"Author.AuthorFirst"};
+        }
+    };
+    # Bail if an error happened
+    if ($@){
+        print "An error occurred accessing $db_loc, terminating.\n";
+        $dbh->disconnect();
+        exit 1;
+    }
+    # TODO: Next, we check the owner for matches
     
     # TODO: Finish implementation
 }
