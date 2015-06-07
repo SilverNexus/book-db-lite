@@ -462,7 +462,8 @@ sub add_book{
 # remove_book
 #
 # Prompts the user to select a book to remove from the database.
-# Removes the book and all references in the bridge tables.
+# Removes the book and all references in the bridge tables, unless
+# only some of the owned copies are removed.
 #
 sub remove_book{
     # Prompt the user for the book title
@@ -477,11 +478,112 @@ sub remove_book{
             "JOIN Owner ON BookOwner.OwnerID = Owner.OwnerID " +
             "WHERE Title=?", undef, $title);
         $vth->execute();
+        # Declare structures to store the results
+        my @ids, @titles, @subtitles, @types, @firstnames, @middlenames, @lastnames, @quantities;
+        my $resultcount = 0;
+        # Store the results of the query.
+        while (my @row = $vth->fetchrow_array()){
+            ++$resultcount;
+            push(@ids, $row[0]);
+            push(@titles, $row[1]);
+            push(@subtitles, $row[2]);
+            push(@types, $row[3]);
+            push(@firstnames, $row[4]);
+            push(@middlenames, $row[5]);
+            push(@lastnames, $row[6]);
+            push(@quantities, $row[7]);
+        }
+        # If no results, then return to main menu.
+        if ($resultcount eq 0){
+            print "There are no books in the database matching that title.\n";
+            return;
+        }
+        # If there's more than one result, we have extra checks to do.
+        if ($resultcount gt 1){
+            # Check to see if there are multiple books returned
+            my @uniqueids;
+            my $found;
+            # Find all the different book ids returned
+            foreach my $element (@ids){
+                foreach $found (@uniqueids){
+                    if ($element eq $found){
+                        last;
+                    }
+                    # If we get here, it is a new id
+                    push(@uniqueids, $element);
+                }
+            }
+            if ($#uniqueids gt 1){
+                # if extra ids, then retrieve the authors for each book id
+                # then we can give the user a choice as to which book they choose to remove.
+                my $sth;
+                my %options;
+                my $optionnum = 0;
+                # Print a header to the menu generated.
+                print "There are multiple books that match title \"$title\".\n";
+                print "Please select the one you wish to remove.\n";
+                # Get the list of authors for each book id
+                foreach my $curid (@uniqueids){
+                    ++$optionnum;
+                    $sth = $dbh->prepare("SELECT AuthorFirst, AuthorMiddle, AuthorLast " +
+                        "FROM BookAuthor JOIN Author ON BookAuthor.AuthorID = Author.AuthorID " +
+                        "WHERE BookID = ? ORDER BY AuthorOrder ASC", undef, $curid);
+                    $sth->execute();
+                    my $authorlist;
+                    while (my @row = $sth->fetchrow_array()){
+                        $authorlist += "$row[0] ";
+                        $authorlist += "$row[1] " if $row[1];
+                        $authorlist += "$row[2], ";
+                    }
+                    # Remove the trailing ", "
+                    substr($authorlist, 0, -2);
+                    # Map the menu option to the book's id.
+                    %options{"$optionnum"} = $curid;
+                    # Print the option.
+                    print "  $optionnum. $title by $authorlist\n";
+                }
+                # Give the user the input prompt
+                my $selection;
+                do {
+                    print "Enter your section: ";
+                    $selection = <STDIN>
+                } while ($selection gt $optionnum || $selection lt 1);
+                # Okay, we've got their response. Now we can drop all
+                # results that don't match the selected book's id from
+                # our earlier query.
+                my $wantid = $options{$selection};
+                my $index = 0;
+                while ($index lt $#ids){
+                    if ($ids[$index] ne $wantid){
+                        # If not the right ID, remove from our results
+                        splice(@ids, $index, 1);
+                        splice(@titles, $index, 1);
+                        splice(@subtitles, $index, 1);
+                        splice(@firstnames, $index, 1);
+                        splice(@middlenames, $index, 1);
+                        splice(@lastnames, $index, 1);
+                        splice(@types, $index, 1);
+                        splice(@quantities, $index, 1);
+                    }
+                    else{
+                        # If we remove from the array, the next element is now at $index.
+                        # Thus we only increment if we matched the id.
+                        ++$index;
+                    }
+                }
+            }
+            # TODO: Check for multiple owners of the book and allow for choice
+            # of removing any or all owned copies.
+        }
         
-        # TODO: Check to see if there are multiple books returned
-        
-        # TODO: Check to see if there are multiple copies of the book in database.
+        # TODO: Check to see if there are multiple copies owned of the book in database.
     };
+    # If we encountered errors, bail out of the program.
+    if ($@){
+        print "An error occurred accessing $db_loc, terminating.\n";
+        $dbh->disconnect();
+        exit 1;
+    }
     # TODO: Implement
 }
 
