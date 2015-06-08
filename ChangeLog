@@ -1,5 +1,6 @@
 2015-06-08  Daniel Hawkins
     * src/bookdblite.pl: Continue implementation of main menu operations.
+    * lib/conversions/README: Begin establishing framework for schema conversions.
 
 2015-06-07  Daniel Hawkins
     * src/bookdblite.pl: Continue implementation of main menu operations.
