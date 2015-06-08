@@ -703,7 +703,49 @@ sub query{
 # into the database. Integral to database schema upgrades.
 #
 sub import_csv{
-    # TODO: Implement
+    # First, we ask the user where the csv collection to import is located.
+    my $import_loc;
+    do{
+        print "Where is the folder for the data you'd like to import located? ";
+        $import_loc = <STDIN>;
+    } until (-d $import_loc);
+    # Now that we know where the data is. make sure it is the right schema version.
+    my $file = open(VER, "< $import_loc/Version.csv");
+    # Fail if the file doesn't exist -- we need schema info here.
+    unless ($file){
+        print "Could not find version info for database data. Import failed.\n";
+        return;
+    }
+    # Get the columns
+    my $line = <VER>;
+    # Split on comma
+    my @cols = split($line, ",");
+    # Find the index of SchemaVersion in the csv.
+    # Should be zero, but just in case, I don't want to hardcode it yet.
+    for (my $index = 0; $index < $#cols; ++$index){
+        last if ($cols[$index] =~ "SchemaVersion";
+    }
+    # If we didn't find SchemaVersion, fail the import.
+    unless ($index < $#cols){
+        print "Did not find Schema Version in exported data, import failed.\n";
+        return;
+    }
+    # Now that we know what column to look in, get the schema version
+    # Also, make sure there is another line in the file
+    unless ($line = <VER>){
+        print "Exported data file is missing data; import failed.\n";
+        return;
+    }
+    # Break apart the fields
+    @cols = split(line, ",");
+    # Make sure the schema version is correct
+    # Fail import if it is not.
+    unless ($cols[$index] =~ $SCHEMA_VERSION){
+        print "Imported data does not have the right schema version. Import failed.\n";
+        return;
+    }
+    
+    # TODO: Implement import
 }
 
 #
