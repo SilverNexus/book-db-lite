@@ -757,7 +757,7 @@ sub export_data{
             $sth->execute();
             
             # Set up the output file for dumping.
-            my $file = open (OUT, "> $export_loc/$tbl");
+            my $file = open (OUT, "> $export_loc/$tbl.csv");
             unless ($file){
                 print "Failed to create data export file $export_loc/$tbl, terminating.\n";
                 $dbh->disconnect();
