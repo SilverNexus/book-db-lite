@@ -747,14 +747,53 @@ sub export_data{
         my $vth = $dbh->prepare("SELECT name FROM sqlite_master WHERE type='table';");
         $vth->execute();
         # Parse the results of the query.
-        while (@row = $vth->fetchrow_array()){
+        while (my @row = $vth->fetchrow_array()){
             push(@tables, $row[0]);
         }
-        # TODO: Get the column names for each table.
+        my $sth;
+        foreach my $tbl (@tables){
+            # Get the column names.
+            $sth = $dbh->prepare("pragma table_info($tbl);");
+            $sth->execute();
+            
+            # Set up the output file for dumping.
+            my $file = open (OUT, "> $export_loc/$tbl");
+            unless ($file){
+                print "Failed to create data export file $export_loc/$tbl, terminating.\n";
+                $dbh->disconnect();
+                exit 1;
+            }
+            
+            # Print field names to the csv file.
+            # The first one does not have a leading comma.
+            if (my @res = $sth->fetchrow_array()){
+                # The second item in the array should be the column name
+                print OUT $res[1];
+                while (@res = $sth->fetchrow_array()){
+                    print OUT ",$res[1]";
+                }
+            }
+            # Start placing data on the next line.
+            print OUT "\n";
         
-        # TODO: Print a field name row to the csv file.
-        
-        # TODO: Output each row of the table to its corresponding csv file.
+            # Output each row of the table to its corresponding csv file.
+            $sth = $dbh->prepare("SELECT * FROM $tbl");
+            $sth->execute();
+
+            # Set the separator for printing the array to a single comma
+            # local makes sure it doesn't foul up output when leaving this scope.
+            local $, = ",";
+
+            while (@res = $sth->fetchrow_array()){
+                print OUT @res;
+            }
+            # Close the file
+            close(OUT);
+        }
     };
-    
+    if ($@){
+        print "An error occurred accessing $db_loc, terminating.\n";
+        $dbh->disconnect();
+        exit 1;
+    }
 }
