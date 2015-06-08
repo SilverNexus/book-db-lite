@@ -731,7 +731,7 @@ sub export_data{
     $export_loc += "export";
         
     # Create a folder for the exported csv files to be stored if it does not exist.
-    unless -d $export_loc{
+    unless (-d $export_loc){
         unless (mkdir $export_loc){
             print "Failed to export database data: non-directory named 'export' already exists.\n";
             # Since we can call this from the pre-menu upgrade system, its safer to just bail
@@ -784,7 +784,7 @@ sub export_data{
             # local makes sure it doesn't foul up output when leaving this scope.
             local $, = ",";
 
-            while (@res = $sth->fetchrow_array()){
+            while (my @res = $sth->fetchrow_array()){
                 print OUT @res;
             }
             # Close the file
