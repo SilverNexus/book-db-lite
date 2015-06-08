@@ -2,10 +2,10 @@
 
 #
 # Note: This install script should be run as root to allow for this to
-# be copied to /usr/local/bin.
+# be copied to /usr/local/.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-05
+# Last Modified: 2015-06-08
 #
 
 # We need sqlite3-pcre to work, so check for it.
@@ -27,3 +27,12 @@ if [ $? != 0 ]; then
 fi
 # Add a link so we can run with or without file extension
 ln -s /usr/local/bin/bookdblite.pl /usr/local/bin/bookdblite
+
+# Copy the conversion script
+cp share/bookdbconv.pl /usr/local/share/bookdblite.pl
+if [ $? != 0 ]; then
+    echo "Failed to copy bookdbconv.pl to usr/local/share."
+    echo "Are you running as root?"
+fi
+# Don't forget the link to the file name without the extension
+ln -s /usr/local/share/bookdbconv.pl /usr/local/share/bookdbconv

@@ -1,6 +1,8 @@
 2015-06-08  Daniel Hawkins
     * src/bookdblite.pl: Continue implementation of main menu operations.
-    * lib/conversions/README: Begin establishing framework for schema conversions.
+    * share/conversions/README: Begin establishing framework for schema conversions.
+    * share/bookdbconv.pl: Create file to house the conversion script.
+    * install_linux.sh: Copy bookdbconv.pl to /usr/local/share on installation.
 
 2015-06-07  Daniel Hawkins
     * src/bookdblite.pl: Continue implementation of main menu operations.
