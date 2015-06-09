@@ -383,6 +383,8 @@ sub add_book{
     my $more = yes_no_prompt("Would you like to add more data to the entry (Y/N)? ");
     while ($more =~ /[Yy]/){
         # TODO: Implement additional data field entry system.
+        # We will need a list of fields not set, and then allow the user
+        # to pick from those. Set values will be stored in $bookdata.
         
         # This is temporary to prevent an infinite loop
         $more = "n";
@@ -454,6 +456,12 @@ sub add_book{
         exit 1;
     }
     # TODO: Next, we check the owner for matches
+    
+    # If there are multiple matching owners we ask which owner we would like to add the book to.
+    # Ask how many copies we would like to add.
+    
+    # If the owner already has copies, then add to the quantity and finish.
+    # If the owner does not, then we need to make sure it gets added as an entry with any other new data.
     
     # TODO: Finish implementation
 }
@@ -693,7 +701,19 @@ sub remove_book{
 # used as a database backup. It loses the database structure in it's results.
 #
 sub query{
-    # TODO: Implement
+    # TODO: Create a list of fields we can search on
+    
+    # TODO: Create a list that will contain the fields we are searching on
+    
+    # TODO: While the user selects columns to search on, move columns from the
+    # list of all fields to the list we are searching on
+    
+    # TODO: Parse the columns we are searching on to determine joins.
+    
+    # TODO: Construct appropriate query to perform and return the results.
+    
+    # TODO: Prompt the user if he/she would like to store the results in a file
+    
 }
 
 #
@@ -742,6 +762,7 @@ sub import_csv{
     # Fail import if it is not.
     unless ($cols[$index] =~ $SCHEMA_VERSION){
         print "Imported data does not have the right schema version. Import failed.\n";
+        print "Perform a schema upgrade on the data in order to proceed.\n"
         return;
     }
     
