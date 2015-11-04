@@ -7,6 +7,7 @@ Dependencies:
     - sqlite3-pcre (available in many distro repositories, if not, go to
         https://github.com/ralight/sqlite3-pcre and download it. Run 'make'
         and 'sudo make install' on the unzipped version of it.
+    - Package Tk (provided by perl-tk on Debian systems)
 
 To install to the system path:
     - Ensure you have met all dependency requirements.

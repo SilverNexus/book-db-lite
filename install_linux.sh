@@ -18,6 +18,15 @@ if [ $? != 0 ]; then
     exit
 fi
 
+# Check for Tk, too. It is needed for the GUI
+# Since we really just need to find it, don't do anything special.
+RES=`find /usr -name "Tk.pm"`
+if [ RES != '' ]; then
+    echo "Failed to find Tk.pm."
+    echo "Make sure perl-tk is installed and you are running this script as root."
+    exit
+fi
+
 # Copy the perl script
 cp src/bookdblite.pl /usr/local/bin/bookdblite.pl
 if [ $? != 0 ]; then
