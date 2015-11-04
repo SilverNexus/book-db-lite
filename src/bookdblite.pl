@@ -1,16 +1,17 @@
 #!/usr/bin/perl
 
 #
-# This program provides a command-line interface to a database for storing
+# This program provides a GUI interface to a database for storing
 # book information. It provides mechanisms to differentiate owners, book
 # backing type (hardcover or softcover) and more.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-07
+# Last Modified: 2015-11-03
 #
 
 use strict;
 use DBD::SQLite;
+use Tk;
 
 my $SCHEMA_VERSION = "0.0.1";
 my $VERSION = "0.0.0-dev";
