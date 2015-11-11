@@ -10,6 +10,7 @@
 #
 
 use strict;
+require DBD::SQLite;
 use DBD::SQLite;
 use Tk;
 
