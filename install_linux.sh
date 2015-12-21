@@ -5,8 +5,16 @@
 # be copied to /usr/local/.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-08
+# Last Modified: 2015-12-21
 #
+
+# First things first -- make sure Perl is installed
+perl -v
+if [ $? != 0 ] then
+    echo "Could not find Perl installation."
+    echo "Make sure it is installed to the system path, then try again."
+    exit
+fi
 
 # We need sqlite3-pcre to work, so check for it.
 # We use find so that if it were to be installed in a nonstandard location,
