@@ -60,3 +60,61 @@ int add(const char * const title, const char * const author, int year,
     // TODO: Implement
     return -1;
 }
+
+/**
+ * Removes a specified quantity of a book from one owner.
+ *
+ * @param title
+ * The title of the book
+ *
+ * @param author
+ * The author of the book
+ *
+ * @param owner_name
+ * The name of the removed book's owner
+ *
+ * @param binding_type
+ * The type of the book's binding
+ *
+ * @param quantity
+ * The number of the book to remove
+ *
+ * @retval 0
+ * Removal completed successfully
+ *
+ * @retval -1
+ * Removal failed
+ */
+int remove(const char * const title, const char * cost author,
+  const char * const owner_name, const char * const binding_type,
+  unsigned int quantity){
+    // TODO: Implement
+    return -1;
+}
+
+typedef enum {
+    FIELD_TITLE = 1,
+    FIELD_AUTHOR,
+    FIELD_OWNER,
+    FIELD_BINDING,
+    FIELD_YEAR,
+    FIELD_ISBN,
+    FIELD_GENRE
+} fields;
+
+/**
+ * Search using a given field
+ *
+ * @param search_field
+ * The field we will search for results
+ *
+ * @param search_text
+ * The text we will search for in the specified field
+ *
+ * @todo
+ * In which way do I intend to give back results?
+ */
+int search(fields search_field, const char * const search_text){
+    // TODO: Implement
+    return -1;
+}
