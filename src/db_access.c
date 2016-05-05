@@ -27,6 +27,9 @@
 /**
  * Adds an entry to the database for the book specified in the arguments.
  *
+ * @param db
+ * Reference to the current database
+ *
  * @param title
  * The title of the book
  *
@@ -54,15 +57,25 @@
  * @retval -1
  * Add failed
  */
-int add(const char * const title, const char * const author, int year,
-  const char * const owner_name, const char * const genre,
+int add(sqlite3 *db, const char * const title, const char * const author,
+  int year, const char * const owner_name, const char * const genre,
   const char * const binding_type, const char * const isbn){
+    if (!db)
+	return -1;
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, "SELECT BookID FROM Book WHERE Title = ? AND Year = ? AND ISBN = ?", -1, &stmt, 0) != SQLITE_DONE){
+	// TODO: Determine whether this should throw an error message.
+	return -1;
+    }
     // TODO: Implement
     return -1;
 }
 
 /**
  * Removes a specified quantity of a book from one owner.
+ *
+ * @param db
+ * The database connection we are using
  *
  * @param title
  * The title of the book
@@ -85,7 +98,7 @@ int add(const char * const title, const char * const author, int year,
  * @retval -1
  * Removal failed
  */
-int remove(const char * const title, const char * cost author,
+int remove(sqlite3 *db, const char * const title, const char * const author,
   const char * const owner_name, const char * const binding_type,
   unsigned int quantity){
     // TODO: Implement
@@ -105,6 +118,9 @@ typedef enum {
 /**
  * Search using a given field
  *
+ * @param db
+ * The database we are using
+ *
  * @param search_field
  * The field we will search for results
  *
@@ -114,7 +130,7 @@ typedef enum {
  * @todo
  * In which way do I intend to give back results?
  */
-int search(fields search_field, const char * const search_text){
+int search(sqlite3 *db, fields search_field, const char * const search_text){
     // TODO: Implement
     return -1;
 }

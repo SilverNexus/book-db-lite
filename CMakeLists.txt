@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project( book-db-lite )
 find_library( sqlite3 libsqlite3.so "/usr/lib" "/usr/local/lib" "/usr/lib/x86_64-linux-gnu" )
-add_executable( book-db-lite src/db_access.c )
+add_executable( book-db-lite src/db_access.c src/main.c )
 target_link_libraries( book-db-lite sqlite3 )

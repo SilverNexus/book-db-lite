@@ -1,6 +1,7 @@
 2016-05-04  Daniel Hawkins
     * src/db_access.c: Begin supplanting original Perl concept with a C interface.
     * CMakeLists.txt: Set up CMake for the C implementation.
+    * src/main.c: Make a main function.
 
 2015-11-10  Daniel Hawkins
     * src/bookdblite.pl: Add require clause to DBD::SQLite.
