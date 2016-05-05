@@ -101,6 +101,8 @@ int add(sqlite3 *db, const char * const title, const char * const author,
 int remove(sqlite3 *db, const char * const title, const char * const author,
   const char * const owner_name, const char * const binding_type,
   unsigned int quantity){
+    if (!db)
+	return -1;
     // TODO: Implement
     return -1;
 }
@@ -114,6 +116,28 @@ typedef enum {
     FIELD_ISBN,
     FIELD_GENRE
 } fields;
+
+// Parallel array for the field name
+static const char * const *field_name = {
+    "Title",
+    "Author",
+    "Owner",
+    "TypeName",
+    "Year",
+    "ISBN",
+    "Genre"
+};
+
+// Parallel array for the table the field is in.
+static const char * const *table_name = {
+    "Book",
+    "Author",
+    "Owner",
+    "Type",
+    "Book",
+    "Book",
+    "Genre"
+};
 
 /**
  * Search using a given field
@@ -131,6 +155,8 @@ typedef enum {
  * In which way do I intend to give back results?
  */
 int search(sqlite3 *db, fields search_field, const char * const search_text){
+    if (!db)
+	return -1;
     // TODO: Implement
     return -1;
 }

@@ -1,3 +1,6 @@
+2016-05-05  Daniel Hawkins
+    * src/db_access.c: Addition of arrays to go with field enum w/ search function.
+
 2016-05-04  Daniel Hawkins
     * src/db_access.c: Begin supplanting original Perl concept with a C interface.
     * CMakeLists.txt: Set up CMake for the C implementation.
