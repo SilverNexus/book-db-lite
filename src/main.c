@@ -19,10 +19,39 @@
 
 /**
  * @file main.c
- * Houses the manin entry point for the program.
+ * Houses the main entry point for the program.
+ * Also handles argument parsing and database open/close.
  */
 
-int main(){
-    // TODO: Initialize and implement
+#include <sqlite3.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+static inline void print_help(){
+    puts("You must provide the name of the database you wish to load.");
+    exit(0);
+}
+
+static sqlite3 *db;
+
+static void close_db(){
+    sqlite3_close_v2(db);
+}
+
+int main(int argc, const char * const *argv){
+    if (argc != 2){
+	print_help();
+    }
+    // argv[1] is the db path
+    int result = sqlite3_open_v2(argv[1], &db, SQLITE_OPEN_READWRITE, 0);
+    // Register a function to close the db on exit.
+    // This is before the result check since we need to close the db even if we fail.
+    atexit(close_db);
+    if (result != SQLITE_OK){
+	printf("Failed to open database at %s.\n", argv[1]);
+	// Exit with a failure status
+	exit(1);
+    }
+    // TODO: Finish initializing and begin implementing
     return 0;
 }
