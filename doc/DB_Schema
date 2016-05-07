@@ -3,7 +3,7 @@
 # database backend for this script.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2015-06-06
+# Last Modified: 2016-05-07
 #
 
 Table       Field           Type            Nullable        PK      FK      FK_To_Table
@@ -23,6 +23,7 @@ Owner       OwnerID         integer         N               Y       N       -
 Owner       OwnerLast       text            N               N       N       -
 Owner       OwnerFirst      text            N               N       N       -
 Owner       OwnerMiddle     text            Y               N       N       -
+Owner       OwnerSuffix     text            Y               N       N       -
 
 BookGenre   BookID          integer         N               Y       Y       Book
 BookGenre   GenreID         integer         N               Y       Y       Genre
@@ -41,5 +42,6 @@ Author      AuthorID        integer         N               Y       N       -
 Author      AuthorLast      text            N               N       N       -
 Author      AuthorFirst     text            N               N       N       -
 Author      AuthorMiddle    text            Y               N       N       -
+Author      AuthorSuffix    text            Y               N       N       -
 
 Version     SchemaVersion   text            N               N       N       -
