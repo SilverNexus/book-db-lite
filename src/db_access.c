@@ -58,13 +58,22 @@
  * Add failed
  */
 int add(sqlite3 *db, const char * const title, const char * const author,
-  int year, const char * const owner_name, const char * const genre,
+  const int year, const char * const owner_name, const char * const genre,
   const char * const binding_type, const char * const isbn){
     if (!db)
 	return -1;
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, "SELECT BookID FROM Book WHERE Title = ? AND Year = ? AND ISBN = ?", -1, &stmt, 0) != SQLITE_DONE){
-	// TODO: Determine whether this should throw an error message.
+    if (sqlite3_prepare_v2(db, "SELECT BookID FROM Book WHERE Title = ? AND Year = ? AND ISBN = ?", -1, &stmt, 0) != SQLITE_OK){
+	// TODO: Determine whether this should print an error message.
+	return -1;
+    }
+    if (sqlite3_bind_text(stmt, 1, title, -1, 0) != SQLITE_OK){
+	return -1;
+    }
+    if (sqlite3_bind_int(stmt, 2, year) != SQLITE_OK){
+	return -1;
+    }
+    if (sqlite3_bind_text(stmt, 3, isbn, -1, 0) != SQLITE_OK){
 	return -1;
     }
     // TODO: Implement
@@ -118,7 +127,7 @@ typedef enum {
 } fields;
 
 // Parallel array for the field name
-static const char * const *field_name = {
+static const char * const field_name[] = {
     "Title",
     "Author",
     "Owner",
@@ -129,7 +138,7 @@ static const char * const *field_name = {
 };
 
 // Parallel array for the table the field is in.
-static const char * const *table_name = {
+static const char * const table_name[] = {
     "Book",
     "Author",
     "Owner",

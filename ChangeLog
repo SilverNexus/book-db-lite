@@ -1,5 +1,6 @@
 2016-05-05  Daniel Hawkins
     * src/db_access.c: Addition of arrays to go with field enum w/ search function.
+      Continue implementing add function.
     * src/main.c: Implement db open/close and argument for db path.
 
 2016-05-04  Daniel Hawkins
