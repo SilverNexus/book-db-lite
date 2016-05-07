@@ -23,6 +23,7 @@
  */
 
 #include <sqlite3.h>
+#include "book.h"
 
 /**
  * Adds an entry to the database for the book specified in the arguments.
@@ -30,26 +31,8 @@
  * @param db
  * Reference to the current database
  *
- * @param title
- * The title of the book
- *
- * @param author
- * The author of the book
- *
- * @param year
- * The year the book was published
- *
- * @param owner_name
- * The name of the book's owner
- *
- * @param genre
- * The book's genre
- *
- * @param binding_type
- * The book's binding type (e.g. softcover, hardcover)
- *
- * @param isbn
- * The ISBN of the book (prefer ISBN-13 over ISBN-10)
+ * @param book_info
+ * Reference to the book structure to add
  *
  * @retval 0
  * Add was successful
@@ -57,9 +40,7 @@
  * @retval -1
  * Add failed
  */
-int add(sqlite3 *db, const char * const title, const char * const author,
-  const int year, const char * const owner_name, const char * const genre,
-  const char * const binding_type, const char * const isbn){
+int add(sqlite3 *db, const book * const book_info){
     if (!db)
 	return -1;
     sqlite3_stmt *stmt;
@@ -67,13 +48,13 @@ int add(sqlite3 *db, const char * const title, const char * const author,
 	// TODO: Determine whether this should print an error message.
 	return -1;
     }
-    if (sqlite3_bind_text(stmt, 1, title, -1, 0) != SQLITE_OK){
+    if (sqlite3_bind_text(stmt, 1, book_info->title, -1, 0) != SQLITE_OK){
 	return -1;
     }
-    if (sqlite3_bind_int(stmt, 2, year) != SQLITE_OK){
+    if (sqlite3_bind_int(stmt, 2, book_info->year) != SQLITE_OK){
 	return -1;
     }
-    if (sqlite3_bind_text(stmt, 3, isbn, -1, 0) != SQLITE_OK){
+    if (sqlite3_bind_text(stmt, 3, book_info->ISBN, -1, 0) != SQLITE_OK){
 	return -1;
     }
     while (sqlite3_step(stmt) == SQLITE_ROW){
@@ -90,20 +71,8 @@ int add(sqlite3 *db, const char * const title, const char * const author,
  * @param db
  * The database connection we are using
  *
- * @param title
- * The title of the book
- *
- * @param author
- * The author of the book
- *
- * @param owner_name
- * The name of the removed book's owner
- *
- * @param binding_type
- * The type of the book's binding
- *
- * @param quantity
- * The number of the book to remove
+ * @param book_info
+ * The book we wish to remove one from
  *
  * @retval 0
  * Removal completed successfully
@@ -111,9 +80,7 @@ int add(sqlite3 *db, const char * const title, const char * const author,
  * @retval -1
  * Removal failed
  */
-int remove(sqlite3 *db, const char * const title, const char * const author,
-  const char * const owner_name, const char * const binding_type,
-  unsigned int quantity){
+int remove(sqlite3 *db, const book * const book_info){
     if (!db)
 	return -1;
     // TODO: Implement

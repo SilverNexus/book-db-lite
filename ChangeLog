@@ -1,5 +1,6 @@
 2016-05-06  Daniel Hawkins
     * src/db_access.c: Continue implementing add function.
+      Refactor to use new book struct.
     * doc/DB_Schema: Add suffix for names in order to allow for more complete naming.
     * src/book.h: Create a structure for storing book data.
 
