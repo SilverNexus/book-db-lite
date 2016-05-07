@@ -76,6 +76,10 @@ int add(sqlite3 *db, const char * const title, const char * const author,
     if (sqlite3_bind_text(stmt, 3, isbn, -1, 0) != SQLITE_OK){
 	return -1;
     }
+    while (sqlite3_step(stmt) == SQLITE_ROW){
+	// We really only want one book. If we can't disambiguate, try harder in other tables.
+	// TODO: Implement
+    }
     // TODO: Implement
     return -1;
 }
