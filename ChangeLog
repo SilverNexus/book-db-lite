@@ -1,5 +1,9 @@
 2016-05-08  Daniel Hawkins
     * share/ui/*: Add rudimentary GUI windows. No binding done yet.
+    * README: Added a readme.
+    * doc/book-db-lite.1.man: Added a manpage. Need to find a way to install
+      via CMake.
+    * src/book.h: Refactored to make only only non-specified-size array.
 
 2016-05-06  Daniel Hawkins
     * src/db_access.c: Continue implementing add function.
