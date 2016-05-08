@@ -1,0 +1,6 @@
+book-db-lite is a graphical tool intended to allow for easy tracking of books
+for a small group of indivduals, such as a family or household.
+
+Usage:
+    book-db-lite
+    book-db-lite <db_file_name>
