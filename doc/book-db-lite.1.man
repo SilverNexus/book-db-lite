@@ -1,0 +1,19 @@
+.\" Manpage for book-db-lite
+.\" Corrections should be put in Issues on the GitHub page for this project.
+
+.TH book-db-lite 1 "08 May 2016" "0.0-pre-alpha" "book-db-lite Manual"
+
+.SH NAME
+book-db-lite
+
+.SH SYNOPSIS
+book-db-lite [\fIdb file\fR]
+
+.SH DESCRIPTION
+book-db-lite is a GUI frontend to manage a book database.
+It is intended for personal or group usage, such as a household.
+It allows for differentiation of book owner, hard/soft covers,
+and a few other features.
+
+.SH AUTHOR
+ (C) 2015-2016 Daniel Hawkins (silvernexus@sourceforge.net)
