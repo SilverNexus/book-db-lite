@@ -1,3 +1,6 @@
+2016-05-08  Daniel Hawkins
+    * share/ui/*: Add rudimentary GUI windows. No binding done yet.
+
 2016-05-06  Daniel Hawkins
     * src/db_access.c: Continue implementing add function.
       Refactor to use new book struct.
