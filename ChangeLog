@@ -1,5 +1,7 @@
 2016-05-09  Daniel Hawkins
     * src/db_access.c: Continued to implement add function.
+    * install_win.bat: Removed -- never implemented anyway.
+    * install_linux.sh: Removed -- implementation will be covered by CMake instead.
 
 2016-05-08  Daniel Hawkins
     * share/ui/*: Add rudimentary GUI windows. No binding done yet.
