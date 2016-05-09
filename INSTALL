@@ -2,17 +2,13 @@ Installation Instructions
 -------------------------
 
 Dependencies:
-    - A Perl 5 interpreter
-    - Package DBD::SQLite3 (provided by libdbd-sqlite3-perl on Debian systems)
-    - sqlite3-pcre (available in many distro repositories, if not, go to
-        https://github.com/ralight/sqlite3-pcre and download it. Run 'make'
-        and 'sudo make install' on the unzipped version of it.
-    - Package Tk (provided by perl-tk on Debian systems)
+    - SQLite3 (interfacing library)
+    - GTK2
 
 To install to the system path:
     - Ensure you have met all dependency requirements.
-    - Run the install script in install_linux.sh or install_win.bat,
-      depending on your operating system.
+    - Configure with CMake.
+    - run `make; sudo make install`
 
 To run:
-    Type bookdblite in the command-line. It should then run as expected.
+    Type `book-db-lite` in the command-line. It should then run as expected.
