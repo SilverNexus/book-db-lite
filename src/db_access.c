@@ -57,9 +57,15 @@ int add(sqlite3 *db, const book * const book_info){
     if (sqlite3_bind_text(stmt, 3, book_info->ISBN, -1, 0) != SQLITE_OK){
 	return -1;
     }
+    // Unallocated array of book ids.
+    int *book_id_list = 0;
+    unsigned int id_list_len = 0;
     while (sqlite3_step(stmt) == SQLITE_ROW){
 	// We really only want one book. If we can't disambiguate, try harder in other tables.
-	// TODO: Implement
+	// TODO: This is not efficient, since we keep reallocing every time.
+	book_id_list = realloc(book_id_list, sizeof(int) * ++id_list_len);
+	book_id_list[id_list_len - 1] = sqlite3_column_int(stmt, 0);
+	// TODO: Try to disambiguate
     }
     // TODO: Implement
     return -1;
