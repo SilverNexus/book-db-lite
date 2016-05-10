@@ -44,4 +44,4 @@ Author      AuthorFirst     text            N               N       N       -
 Author      AuthorMiddle    text            Y               N       N       -
 Author      AuthorSuffix    text            Y               N       N       -
 
-Version     SchemaVersion   text            N               N       N       -
+Version     SchemaVersion   integer         N               N       N       -
