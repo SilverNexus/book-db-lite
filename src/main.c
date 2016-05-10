@@ -43,15 +43,23 @@ int main(int argc, const char * const *argv){
     if (argc >= 2){
 	print_help();
     }
-    // argv[1] is the db path
-    int result = sqlite3_open_v2(argv[1], &db, SQLITE_OPEN_READWRITE, 0);
-    // Register a function to close the db on exit.
-    // This is before the result check since we need to close the db even if we fail.
-    atexit(close_db);
-    if (result != SQLITE_OK){
-	printf("Failed to open database at %s.\n", argv[1]);
-	// Exit with a failure status
-	exit(1);
+    if (argc == 1){
+	// argv[1] is the db path
+	int result = sqlite3_open_v2(argv[1], &db, SQLITE_OPEN_READWRITE, 0);
+	// Register a function to close the db on exit.
+	// This is before the result check since we need to close the db even if we fail.
+	atexit(close_db);
+	if (result != SQLITE_OK){
+	    printf("Failed to open database at %s.\n", argv[1]);
+	    // Exit with a failure status
+	    exit(1);
+	}
+    }
+    else{
+	// Give the user the choice of creating a new db or loading an existing one.
+	// Use a GUI window for this.
+
+	// TODO: Implement
     }
     // TODO: Finish initializing and begin implementing
     return 0;

@@ -5,7 +5,9 @@
     * doc/DB_Schema: Adjust the schema version to use integers. It's easier for
       comparisons on schema versions.
     * src/db_access.h: New file -- constins function prototypes and relevant constants.
-    * src/main.c: Added include for db_access.h
+    * src/main.c: Added include for db_access.h.
+      Refactored startup to match the documentation call examples. No argument executions
+      are now accepted like documentation indicates.
 
 2016-05-09  Daniel Hawkins
     * src/db_access.c: Continued to implement add function.
