@@ -1,3 +1,7 @@
+2016-05-10  Daniel Hawkins
+    * src/db_access.c: Stub out more details for the add function and
+      refactor the step through the results to handle errors gracefully.
+
 2016-05-09  Daniel Hawkins
     * src/db_access.c: Continued to implement add function.
     * install_win.bat: Removed -- never implemented anyway.

@@ -60,13 +60,27 @@ int add(sqlite3 *db, const book * const book_info){
     // Unallocated array of book ids.
     int *book_id_list = 0;
     unsigned int id_list_len = 0;
-    while (sqlite3_step(stmt) == SQLITE_ROW){
+    int result;
+    while ((result = sqlite3_step(stmt)) == SQLITE_ROW){
 	// We really only want one book. If we can't disambiguate, try harder in other tables.
 	// TODO: This is not efficient, since we keep reallocing every time.
 	book_id_list = realloc(book_id_list, sizeof(int) * ++id_list_len);
 	book_id_list[id_list_len - 1] = sqlite3_column_int(stmt, 0);
-	// TODO: Try to disambiguate
     }
+    sqlite3_finalize(stmt);
+    if (result != SQLITE_DONE)
+	return -1;
+    if (id_list_len > 1){
+	// TODO: Disambiguate
+    }
+    // Keep performing result narrowing until one result remains.
+    // TODO: More checks
+
+    // Okay, we have exactly one book, now we find the appropriate owner
+    // TODO: Implement
+
+    // With the appropriate owner, we add to the quantity.
+
     // TODO: Implement
     return -1;
 }
