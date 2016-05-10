@@ -26,6 +26,7 @@
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "db_access.h"
 
 static inline void print_help(){
     puts("You must provide the name of the database you wish to load.");
@@ -39,7 +40,7 @@ static void close_db(){
 }
 
 int main(int argc, const char * const *argv){
-    if (argc != 2){
+    if (argc >= 2){
 	print_help();
     }
     // argv[1] is the db path

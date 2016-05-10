@@ -24,6 +24,7 @@
 
 #include <sqlite3.h>
 #include "book.h"
+#include "db_access.h"
 
 /**
  * Adds an entry to the database for the book specified in the arguments.
@@ -106,16 +107,6 @@ int remove(sqlite3 *db, const book * const book_info){
     // TODO: Implement
     return -1;
 }
-
-typedef enum {
-    FIELD_TITLE = 1,
-    FIELD_AUTHOR,
-    FIELD_OWNER,
-    FIELD_BINDING,
-    FIELD_YEAR,
-    FIELD_ISBN,
-    FIELD_GENRE
-} fields;
 
 // Parallel array for the field name
 static const char * const field_name[] = {

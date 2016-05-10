@@ -1,8 +1,11 @@
 2016-05-10  Daniel Hawkins
     * src/db_access.c: Stub out more details for the add function and
       refactor the step through the results to handle errors gracefully.
+      Added a reference to the db_access.h header and moved the search enum to that header.
     * doc/DB_Schema: Adjust the schema version to use integers. It's easier for
       comparisons on schema versions.
+    * src/db_access.h: New file -- constins function prototypes and relevant constants.
+    * src/main.c: Added include for db_access.h
 
 2016-05-09  Daniel Hawkins
     * src/db_access.c: Continued to implement add function.
