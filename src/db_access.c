@@ -45,7 +45,9 @@ int add(sqlite3 *db, const book * const book_info){
     if (!db)
 	return -1;
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, "SELECT BookID FROM Book WHERE Title = ? AND Year = ? AND ISBN = ?", -1, &stmt, 0) != SQLITE_OK){
+    if (sqlite3_prepare_v2(db, "SELECT DISTINCT Book.BookID FROM Book"
+    " JOIN Isbn ON Book.BookID = Isbn.BookID"
+    " WHERE Title = ? AND Year = ? AND ISBN = ?", -1, &stmt, 0) != SQLITE_OK){
 	// TODO: Determine whether this should print an error message.
 	return -1;
     }
