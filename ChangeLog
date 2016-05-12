@@ -1,3 +1,8 @@
+2016-05-11  Daniel Hawkins
+    * doc/DB_Schema: Refactor the ISBN to reduce data redundancy.
+      Each new edition of a book gets a new ISBN, so it can be separate from Book.
+      Add an Edition/Printing field to the Isbn table
+
 2016-05-10  Daniel Hawkins
     * src/db_access.c: Stub out more details for the add function and
       refactor the step through the results to handle errors gracefully.

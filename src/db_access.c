@@ -73,9 +73,10 @@ int add(sqlite3 *db, const book * const book_info){
 	return -1;
     if (id_list_len > 1){
 	// TODO: Disambiguate
+
+	// Keep performing result narrowing until one result remains.
+	// TODO: More checks
     }
-    // Keep performing result narrowing until one result remains.
-    // TODO: More checks
 
     // Okay, we have exactly one book, now we find the appropriate owner
     // TODO: Implement
