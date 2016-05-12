@@ -155,6 +155,77 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
     return -1;
 }
 
+/**
+ * Create a new book database.
+ *
+ * @param db
+ * Reference to the database being created.
+ *
+ * @retval 0
+ * Successfully created the database.
+ *
+ * @retval -1
+ * Failed to create the database.
+ */
 int new_db(sqlite3 *db){
+    if (!db)
+	return -1;
+    sqlite3_stmt *stmt;
+    // TODO: Make this a transaction
+
+    // Table creation.
+
+    // Book
+    if (sqlite3_prepare_v2(db, "CREATE TABLE Book("
+	"BookID   INTEGER PRIMARY KEY,"
+	"Title    TEXT NOT NULL,"
+	"Subtitle TEXT)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Owner
+    if (sqlite3_prepare_v2(db, "CREATE TABLE Owner("
+	"OwnerID     INTEGER PRIMARY KEY,"
+	"OwnerLast   TEXT NOT NULL,"
+	"OwnerFirst  TEXT NOT NULL,"
+	"OwnerMiddle TEXT,"
+	"OwnerSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Type
+    if (sqlite3_prepare_v2(db, "CREATE TABLE Type("
+	"TypeID   INTEGER PRIMARY KEY,"
+	"TypeName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Genre
+    if (sqlite3_prepare_v2(db, "CREATE TABLE Genre("
+	"GenreID   INTEGER PRIMARY KEY,"
+	"GenreName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Author
+    if (sqlite3_prepare_v2(db, "CREATE_TABLE Author("
+	"AuthorID     INTEGER PRIMARY KEY,"
+	"AuthorLast   TEXT NOT NULL,"
+	"AuthorFirst  TEXT NOT NULL,"
+	"AuthorMiddle TEXT,"
+	"AuthorSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
     // TODO: Implement
 }

@@ -5,6 +5,7 @@
     * src/book.h: Added a field for the edition/printing number.
     * src/db_access.c: Adjusted query for renamed Isbn table.
       Stub out a database creation function.
+      Start implementing the database creation function.
     * src/db_access.h: Declare the new database creation function.
 
 2016-05-11  Daniel Hawkins
