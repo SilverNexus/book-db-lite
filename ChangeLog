@@ -1,7 +1,9 @@
 2016-05-12  Daniel Hawkins
     * doc/DB_Schema: Add a surrogate key to the Isbn table.
       Adjust the BookOwner table to reference the particular printing of the book.
+      Rename Isbn table to Printing
     * src/book.h: Added a field for the edition/printing number.
+    * src/db_access.c: Adjusted query for renamed Isbn table.
 
 2016-05-11  Daniel Hawkins
     * doc/DB_Schema: Refactor the ISBN to reduce data redundancy.

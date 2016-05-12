@@ -12,14 +12,14 @@ Book        BookID          integer         N               Y       N       -
 Book        Title           text            N               N       N       -
 Book        Subtitle        text            Y               N       N       -
 
-Isbn        PrintingID      integer         N               Y       N       -
-Isbn        BookID          integer         N               N       Y       Book
-Isbn        ISBN            text            Y               N       N       -
-Isbn        Year            integer         Y               N       N       -
-Isbn        TypeID          integer         N               N       Y       Type
-Isbn        PrintingNum     integer         Y               N       N       -
+Printing    PrintingID      integer         N               Y       N       -
+Printing    BookID          integer         N               N       Y       Book
+Printing    ISBN            text            Y               N       N       -
+Printing    Year            integer         Y               N       N       -
+Printing    TypeID          integer         N               N       Y       Type
+Printing    PrintingNum     integer         Y               N       N       -
 
-BookOwner   PrintingID      integer         N               Y       Y       Isbn
+BookOwner   PrintingID      integer         N               Y       Y       Printing
 BookOwner   OwnerID         integer         N               Y       Y       Owner
 BookOwner   Quantity        integer         N               N       N       -
 
