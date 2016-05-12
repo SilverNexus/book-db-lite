@@ -13,6 +13,7 @@ typedef struct {
     const char *subtitle;
     name owner;
     int year;
+    int edition_num;
     int quantity;
     const char *ISBN;
     const char *binding_type;
