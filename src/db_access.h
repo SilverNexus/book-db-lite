@@ -36,4 +36,6 @@ typedef enum {
 
 int search(sqlite3 *db, fields search_field, const char * const search_text);
 
+int new_db(sqlite3 *db);
+
 #endif

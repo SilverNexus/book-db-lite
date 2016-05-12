@@ -154,3 +154,7 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
     // TODO: Implement
     return -1;
 }
+
+int new_db(sqlite3 *db){
+    // TODO: Implement
+}
