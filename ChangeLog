@@ -1,3 +1,7 @@
+2016-05-12  Daniel Hawkins
+    * doc/DB_Schema: Add a surrogate key to the Isbn table.
+      Adjust the BookOwner table to reference the particular printing of the book.
+
 2016-05-11  Daniel Hawkins
     * doc/DB_Schema: Refactor the ISBN to reduce data redundancy.
       Each new edition of a book gets a new ISBN, so it can be separate from Book.

@@ -3,7 +3,7 @@
 # database backend for this script.
 #
 # Author: Daniel Hawkins
-# Last Modified: 2016-05-11
+# Last Modified: 2016-05-12
 #
 
 Table       Field           Type            Nullable        PK      FK      FK_To_Table
@@ -12,13 +12,14 @@ Book        BookID          integer         N               Y       N       -
 Book        Title           text            N               N       N       -
 Book        Subtitle        text            Y               N       N       -
 
-Isbn        BookID          integer         N               Y       Y       Book
-Isbn        ISBN            text            Y               Y       N       -
+Isbn        PrintingID      integer         N               Y       N       -
+Isbn        BookID          integer         N               N       Y       Book
+Isbn        ISBN            text            Y               N       N       -
 Isbn        Year            integer         Y               N       N       -
 Isbn        TypeID          integer         N               N       Y       Type
-Isbn        Printing        integer         Y               N       N       -
+Isbn        PrintingNum     integer         Y               N       N       -
 
-BookOwner   BookID          integer         N               Y       Y       Book
+BookOwner   PrintingID      integer         N               Y       Y       Isbn
 BookOwner   OwnerID         integer         N               Y       Y       Owner
 BookOwner   Quantity        integer         N               N       N       -
 
