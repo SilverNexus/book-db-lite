@@ -227,5 +227,61 @@ int new_db(sqlite3 *db){
 	return -1;
     sqlite3_finalize(stmt);
 
+    // Printing
+    if (sqlite3_prepare_v2(db, "CREATE TABLE Printing("
+	"PrintingID  INTEGER PRIMARY KEY,"
+	"BookID      INTEGER REFERENCES Book(BookID),"
+	"ISBN        TEXT,"
+	"Year        INTEGER,"
+	"TypeID      INTEGER REFERENCES Type(TypeID),"
+	"PrintingNum INTEGER)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // BookOwner
+    if (sqlite3_prepare_v2("CREATE TABLE BookOwner("
+	"PrintingID INTEGER REFERENCES Printing(PrintingID),"
+	"OwnerID    INTEGER REFERENCES Owner(OwnerID),"
+	"Quantity   INTEGER NOT NULL),"
+	"PRIMARY KEY(PrintingID, OwnerID))", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // BookGenre
+    if (sqlite3_prepare_v2("CREATE TABLE BookGenre("
+	"BookID  INTEGER REFERENCES Book(BookID),"
+	"GenreID INTEGER REFERENCES Genre(GenreID),"
+	"PRIMARY KEY(BookID, GenreID))", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // BookAuthor
+    if (sqlite3_prepare_v2("CREATE TABLE BookAuthor("
+	"BookID      INTEGER REFERENCES Book(BookID),"
+	"AuthorID    INTEGER REFERENCES Author(AuthorID),"
+	"AuthorOrder INTEGER,"
+	"PRIMARY KEY(BookID, AuthorID))", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Version
+    if (sqlite3_prepare("CREATE TABLE Version("
+	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLIE_OK)
+	  return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Now we add the initial data
+
+    // First, add the schema version
     // TODO: Implement
 }
