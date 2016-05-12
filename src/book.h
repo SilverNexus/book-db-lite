@@ -1,3 +1,8 @@
+/**
+ * @file book.h
+ * Defines the structures for book information.
+ */
+
 #ifndef BOOK_H
 #define BOOK_H
 
