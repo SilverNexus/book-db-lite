@@ -27,6 +27,8 @@
 #include "db_access.h"
 #include <stdlib.h>
 
+sqlite3 *db;
+
 /**
  * Adds an entry to the database for the book specified in the arguments.
  *
@@ -320,4 +322,43 @@ int new_db(sqlite3 *db){
 
     // Initialization completed.
     return 0;
+}
+
+/**
+ * Opens a database and performs some sanity checks.
+ *
+ * @param db
+ * A reference to the database pointer. The opened database will
+ * be stored in the database pointer
+ *
+ * @param path
+ * The database file to attempt to open.
+ *
+ * @retval -1
+ * Opening the database failed.
+ *
+ * @retval 1
+ * The database exists, but is not the correct version.
+ *
+ * @retval 0
+ * Database exists and passes all sanity checks.
+ */
+int open_db(const char * const path){
+    int result = sqlite3_open_v2(path, &db, SQLITE_OPEN_READWRITE, 0);
+    // Register a function to close the db on exit.
+    // This is before the result check since we need to close the db even if we fail.
+    atexit(close_db);
+    if (result != SQLITE_OK)
+	return -1;
+    // TODO: Check the schema version of the db. Handle a mismatch in either direction.
+    return 0;
+}
+
+/**
+ * Closes the database
+ *
+ * Cannot have any parameters, since it is used by atexit().
+ */
+void close_db(){
+    sqlite3_close_v2(db);
 }

@@ -33,26 +33,15 @@ static inline void print_help(){
     exit(0);
 }
 
-static sqlite3 *db;
-
-static void close_db(){
-    sqlite3_close_v2(db);
-}
-
 int main(int argc, const char * const *argv){
     if (argc >= 2){
 	print_help();
     }
     if (argc == 1){
-	// argv[1] is the db path
-	int result = sqlite3_open_v2(argv[1], &db, SQLITE_OPEN_READWRITE, 0);
-	// Register a function to close the db on exit.
-	// This is before the result check since we need to close the db even if we fail.
-	atexit(close_db);
-	if (result != SQLITE_OK){
-	    printf("Failed to open database at %s.\n", argv[1]);
-	    // Exit with a failure status
-	    exit(1);
+	// argv[1] is the path
+	if (open_db(argv[1]) < 0){
+	    puts("open_db() failed!");
+	    exit(-1);
 	}
     }
     else{

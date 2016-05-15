@@ -1,7 +1,10 @@
 2016-05-15  Daniel Hawkins
     * src/db_access.c: Finished db initialization.
       Fixes for build errors left from not testing the commits. Oops.
+      Move the database open/close functionality to db_access.c.
     * src/db_access.h: Rename remove -> remove_book to avoid conflicts.
+      Add function prototypes for open/close functions.
+    * src/main.c: Move database open/close functionality out.
 
 2016-05-12  Daniel Hawkins
     * doc/DB_Schema: Add a surrogate key to the Isbn table.

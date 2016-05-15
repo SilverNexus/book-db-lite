@@ -16,6 +16,12 @@
 #define DB_SCHEMA_VERSION 1
 
 /*
+ * Also, but the database pointer declaration out here.
+ * It is needed for close_db() to work in atexit().
+ */
+extern sqlite3 *db;
+
+/*
  * Function prototypes
  */
 
@@ -37,5 +43,9 @@ typedef enum {
 int search(sqlite3 *db, fields search_field, const char * const search_text);
 
 int new_db(sqlite3 *db);
+
+int open_db(const char * const path);
+
+void close_db();
 
 #endif
