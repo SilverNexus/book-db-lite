@@ -5,6 +5,7 @@
     * src/db_access.h: Rename remove -> remove_book to avoid conflicts.
       Add function prototypes for open/close functions.
     * src/main.c: Move database open/close functionality out.
+    * src/bookdblite.pl: Removed. Enough had been ported to C its not a useful reference.
 
 2016-05-12  Daniel Hawkins
     * doc/DB_Schema: Add a surrogate key to the Isbn table.
