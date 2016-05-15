@@ -21,7 +21,7 @@
 
 int add(sqlite3 *db, const book * const book_info);
 
-int remove(sqlite3 *db, const book * const book_info);
+int remove_book(sqlite3 *db, const book * const book_info);
 
 // An enum for the search function.
 typedef enum {

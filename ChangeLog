@@ -1,5 +1,7 @@
 2016-05-15  Daniel Hawkins
     * src/db_access.c: Finished db initialization.
+      Fixes for build errors left from not testing the commits. Oops.
+    * src/db_access.h: Rename remove -> remove_book to avoid conflicts.
 
 2016-05-12  Daniel Hawkins
     * doc/DB_Schema: Add a surrogate key to the Isbn table.

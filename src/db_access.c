@@ -25,6 +25,7 @@
 #include <sqlite3.h>
 #include "book.h"
 #include "db_access.h"
+#include <stdlib.h>
 
 /**
  * Adds an entry to the database for the book specified in the arguments.
@@ -104,7 +105,7 @@ int add(sqlite3 *db, const book * const book_info){
  * @retval -1
  * Removal failed
  */
-int remove(sqlite3 *db, const book * const book_info){
+int remove_book(sqlite3 *db, const book * const book_info){
     if (!db)
 	return -1;
     // TODO: Implement
@@ -223,7 +224,7 @@ int new_db(sqlite3 *db){
 	"AuthorMiddle TEXT,"
 	"AuthorSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE)
 	return -1;
     sqlite3_finalize(stmt);
 
@@ -236,12 +237,12 @@ int new_db(sqlite3 *db){
 	"TypeID      INTEGER REFERENCES Type(TypeID),"
 	"PrintingNum INTEGER)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE)
 	return -1;
     sqlite3_finalize(stmt);
 
     // BookOwner
-    if (sqlite3_prepare_v2("CREATE TABLE BookOwner("
+    if (sqlite3_prepare_v2(db, "CREATE TABLE BookOwner("
 	"PrintingID INTEGER REFERENCES Printing(PrintingID),"
 	"OwnerID    INTEGER REFERENCES Owner(OwnerID),"
 	"Quantity   INTEGER NOT NULL),"
@@ -252,7 +253,7 @@ int new_db(sqlite3 *db){
     sqlite3_finalize(stmt);
 
     // BookGenre
-    if (sqlite3_prepare_v2("CREATE TABLE BookGenre("
+    if (sqlite3_prepare_v2(db, "CREATE TABLE BookGenre("
 	"BookID  INTEGER REFERENCES Book(BookID),"
 	"GenreID INTEGER REFERENCES Genre(GenreID),"
 	"PRIMARY KEY(BookID, GenreID))", -1, &stmt, 0) != SQLITE_OK)
@@ -262,7 +263,7 @@ int new_db(sqlite3 *db){
     sqlite3_finalize(stmt);
 
     // BookAuthor
-    if (sqlite3_prepare_v2("CREATE TABLE BookAuthor("
+    if (sqlite3_prepare_v2(db, "CREATE TABLE BookAuthor("
 	"BookID      INTEGER REFERENCES Book(BookID),"
 	"AuthorID    INTEGER REFERENCES Author(AuthorID),"
 	"AuthorOrder INTEGER,"
@@ -273,7 +274,7 @@ int new_db(sqlite3 *db){
     sqlite3_finalize(stmt);
 
     // Version
-    if (sqlite3_prepare("CREATE TABLE Version("
+    if (sqlite3_prepare(db, "CREATE TABLE Version("
 	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE)
@@ -283,7 +284,7 @@ int new_db(sqlite3 *db){
     // Now we add the initial data
 
     // First, add the schema version
-    if (sqlite3_prepare_v2("INSERT INTO Version VALUES (?)", -1, &stmt, 0) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, "INSERT INTO Version VALUES (?)", -1, &stmt, 0) != SQLITE_OK)
 	return -1;
     if (sqlite3_bind_int(stmt, 1, DB_SCHEMA_VERSION) != SQLITE_OK)
 	return -1;
@@ -294,7 +295,7 @@ int new_db(sqlite3 *db){
     // Second, add the book types -- hardcover & softcover
 
     // Hardcover is added first.
-    if (sqlite3_prapare_v2("INSERT INTO Type (TypeID, TypeName) "
+    if (sqlite3_prepare_v2(db, "INSERT INTO Type (TypeID, TypeName) "
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_bind_int(stmt, 1, 1) != SQLITE_OK)
@@ -306,7 +307,7 @@ int new_db(sqlite3 *db){
     sqlite3_finalize(stmt);
 
     // Softcover is added second.
-    if (sqlite3_prapare_v2("INSERT INTO Type (TypeID, TypeName) "
+    if (sqlite3_prepare_v2(db, "INSERT INTO Type (TypeID, TypeName) "
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_bind_int(stmt, 1, 2) != SQLITE_OK)
