@@ -274,7 +274,7 @@ int new_db(sqlite3 *db){
 
     // Version
     if (sqlite3_prepare("CREATE TABLE Version("
-	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLIE_OK)
+	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE)
 	return -1;
@@ -283,5 +283,40 @@ int new_db(sqlite3 *db){
     // Now we add the initial data
 
     // First, add the schema version
-    // TODO: Implement
+    if (sqlite3_prepare_v2("INSERT INTO Version VALUES (?)", -1, &stmt, 0) != SQLITE_OK)
+	return -1;
+    if (sqlite3_bind_int(stmt, 1, DB_SCHEMA_VERSION) != SQLITE_OK)
+	return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Second, add the book types -- hardcover & softcover
+
+    // Hardcover is added first.
+    if (sqlite3_prapare_v2("INSERT INTO Type (TypeID, TypeName) "
+	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_bind_int(stmt, 1, 1) != SQLITE_OK)
+	return -1;
+    if (sqlite3_bind_text(stmt, 2, "Hardcover", -1, 0) != SQLITE_OK)
+	return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Softcover is added second.
+    if (sqlite3_prapare_v2("INSERT INTO Type (TypeID, TypeName) "
+	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
+	  return -1;
+    if (sqlite3_bind_int(stmt, 1, 2) != SQLITE_OK)
+	return -1;
+    if (sqlite3_bind_text(stmt, 2, "Softcover", -1, 0) != SQLITE_OK)
+	return -1;
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+	return -1;
+    sqlite3_finalize(stmt);
+
+    // Initialization completed.
+    return 0;
 }

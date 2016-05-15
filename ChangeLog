@@ -1,3 +1,6 @@
+2016-05-15  Daniel Hawkins
+    * src/db_access.c: Finished db initialization.
+
 2016-05-12  Daniel Hawkins
     * doc/DB_Schema: Add a surrogate key to the Isbn table.
       Adjust the BookOwner table to reference the particular printing of the book.
