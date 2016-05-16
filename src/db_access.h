@@ -48,4 +48,7 @@ int open_db(const char * const path);
 
 void close_db();
 
+/* db_upgrade.c */
+int db_upgrade(int old_version);
+
 #endif

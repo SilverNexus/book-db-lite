@@ -28,7 +28,7 @@
 /**
  * Upgrades the schema from an old version to the new version.
  *
- * @param oldVer
+ * @param old_version
  * The schema version of the detected database.
  * Expected to be less than DB_SCHEMA_VERSION
  *
@@ -38,6 +38,6 @@
  * @retval -1
  * Upgrade failed
  */
-int db_upgrade(int oldVer){
+int db_upgrade(int old_version){
     // TODO: Implement
 }

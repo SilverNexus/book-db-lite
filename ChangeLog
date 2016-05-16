@@ -3,6 +3,7 @@
     * src/db_upgrade.c: Begin Implementing upgrade function.
     * share/conversions/*: Removed entire directory.
     * share/bookdbconv.pl: Removed.
+    * src/db_access.h: Add function prototype for upgrade function.
 
 2016-05-15  Daniel Hawkins
     * src/db_access.c: Finished db initialization.
