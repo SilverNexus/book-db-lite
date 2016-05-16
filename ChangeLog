@@ -1,3 +1,6 @@
+2016-05-16  Daniel Hawkins
+    * src/db_access.c: Begin implementing load function's schema checks.
+
 2016-05-15  Daniel Hawkins
     * src/db_access.c: Finished db initialization.
       Fixes for build errors left from not testing the commits. Oops.

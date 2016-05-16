@@ -350,7 +350,38 @@ int open_db(const char * const path){
     atexit(close_db);
     if (result != SQLITE_OK)
 	return -1;
-    // TODO: Check the schema version of the db. Handle a mismatch in either direction.
+    // Check the schema version of the db. Handle a mismatch in either direction.
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2("SELECT SchemaVersion FROM Version", -1, &stmt, 0) != SQLITE_OK)
+	return -1;
+    /*
+     * There should only be one value in this table.
+     * We will see if more exist and throw an error if there are, but assume the
+     * first error is correct.
+     */
+    int result = sqlite3_step(stmt);
+    if (result == SQLITE_ROW){
+	int ver = sqlite3_column_int(stmt, 0);
+	if (ver < DB_SCHEMA_VERSION){
+	    // db has lower version, offer to upgrade
+	    // TODO: Offer upgrade
+	}
+	else if (ver > DB_SCHEMA_VERSION){
+	    // TODO: Disallow -- this program is older.
+
+	    sqlite3_finalize(stmt);
+	    return 1;
+	}
+	else{
+	    // The db is correct
+	    // TODO: Check for additional records in Version.
+
+	    return 0;
+	}
+    }
+    else if (result == SQLITE_DONE){
+	// TODO: Throw an error saying there is no schema version.
+    }
     return 0;
 }
 
