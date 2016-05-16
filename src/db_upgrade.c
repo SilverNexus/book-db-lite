@@ -30,14 +30,20 @@
  *
  * @param old_version
  * The schema version of the detected database.
- * Expected to be less than DB_SCHEMA_VERSION
+ * Assumed to be less than DB_SCHEMA_VERSION.
  *
  * @retval 0
  * Upgrade successful
  *
  * @retval -1
  * Upgrade failed
+ *
+ * @note It is assumed that db is already open when this function is reached.
  */
 int db_upgrade(int old_version){
-    // TODO: Implement
+    // Use a switch statement with fallthrough for upgrade.
+    switch (old_version){
+	// There are no upgrades at this time.
+    }
+    return 0;
 }
