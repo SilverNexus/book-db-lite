@@ -1,5 +1,8 @@
 2016-05-16  Daniel Hawkins
     * src/db_access.c: Begin implementing load function's schema checks.
+    * src/db_upgrade.c: Begin Implementing upgrade function.
+    * share/conversions/*: Removed entire directory.
+    * share/bookdbconv.pl: Removed.
 
 2016-05-15  Daniel Hawkins
     * src/db_access.c: Finished db initialization.
