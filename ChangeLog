@@ -1,3 +1,6 @@
+2016-05-17  Daniel Hawkins
+    * CMakeLists.txt: Add src/db_upgrade.c to the compilation process.
+
 2016-05-16  Daniel Hawkins
     * src/db_access.c: Begin implementing load function's schema checks.
     * src/db_upgrade.c: Begin Implementing upgrade function.
