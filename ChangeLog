@@ -1,5 +1,6 @@
 2016-05-17  Daniel Hawkins
     * CMakeLists.txt: Add src/db_upgrade.c to the compilation process.
+    * src/db_access.c: Implement check for too many records in Version table.
 
 2016-05-16  Daniel Hawkins
     * src/db_access.c: Begin implementing load function's schema checks.

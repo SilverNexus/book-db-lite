@@ -373,8 +373,12 @@ int open_db(const char * const path){
 	    return 1;
 	}
 	else{
-	    // The db is correct
-	    // TODO: Check for additional records in Version.
+	    // The db version is correct
+	    // Check for additional records in Version.
+	    if (sqlite3_step(stmt) != SQLITE_DONE){
+		// TODO: Give error of malformed table.
+		return 1;
+	    }
 
 	    return 0;
 	}
