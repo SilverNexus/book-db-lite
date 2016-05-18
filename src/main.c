@@ -29,7 +29,7 @@
 #include "db_access.h"
 
 static inline void print_help(){
-    puts("You must provide the name of the database you wish to load.");
+    puts("Usage: book-db-lite [filename]");
     exit(0);
 }
 
