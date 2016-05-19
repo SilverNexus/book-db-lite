@@ -1,3 +1,6 @@
+2016-05-19  Daniel Hawkins
+    * src/db_access.c: Stub out handling of failed version query in database load.
+
 2016-05-18  Daniel Hawkins
     * src/main.c: Changed help message to reflect ability to load the program
       with no parameter options.

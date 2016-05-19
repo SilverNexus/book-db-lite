@@ -386,6 +386,10 @@ int open_db(const char * const path){
     else if (result == SQLITE_DONE){
 	// TODO: Throw an error saying there is no schema version.
     }
+    else{
+	// TODO: Throw an error saying the database could not be accessed.
+	return -1;
+    }
     return 0;
 }
 
