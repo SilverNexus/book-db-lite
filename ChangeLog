@@ -2,6 +2,7 @@
     * src/db_access.c: Continue implementing search function.
       Fix memory leaks when new_db() fails.
       Fix memory leaks in open_db().
+      Fix memory leaks in add().
 
 2016-05-27  Daniel Hawkins
     * src/db_access.c: Begin implementing search function.

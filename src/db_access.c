@@ -57,12 +57,15 @@ int add(sqlite3 *db, const book * const book_info){
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 1, book_info->title, -1, 0) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_int(stmt, 2, book_info->year) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 3, book_info->ISBN, -1, 0) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
     }
     // Unallocated array of book ids.
