@@ -159,23 +159,37 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 	return -1;
     // TODO: Determine an appropriate value to use for buffer length.
     char querybuf[1000];
+    sqlite3_stmt *stmt;
+    // We may return more than one book with this, so allow for allocation of an array of info structures.
+    book_info *results;
     // Initialize the buffer to hold the common part of the query.
     // It is less than 1000 characters, so I can safely use strcpy()
-    strcpy(querybuf, "SELECT BookID, PrintingID, Title, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
+    strcpy(querybuf, "SELECT BookID, PrintingID, Title, Subtitle, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
 	" FROM Book"
-	// TODO: Finish
 	" JOIN Printing ON Book.BookID = Printing.BookID"
-	" JOIN Owner ON Printing.PrintingID = Owner.PrintingID"
-	" JOIN Type ON Type.TypeID = Printing.TypeID");
+	" JOIN BookOwner ON Printing.PrintingID = BookOwner.PrintingID"
+	" JOIN Type ON Type.TypeID = Printing.TypeID"
+	" JOIN BookGenre ON Book.BookID = BookGenre.BookID"
+	" JOIN BookAuthor ON Book.BookID = BookAuthor.BookID");
     switch (search_field){
 	case FIELD_TITLE:
+	    strcat(querybuf, " WHERE Title = ?");
+	    break;
 	case FIELD_AUTHOR:
+	    // TODO: Parse the author, get that author's id, and get that condition on the query.
 	case FIELD_OWNER:
+	    // TODO: Parse the owner, get that owner's id, and get that condition in the query.
 	case FIELD_BINDING:
 	case FIELD_YEAR:
 	case FIELD_ISBN:
 	case FIELD_GENRE:
 	    //TODO: Implement
+    }
+    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0))
+	return -1;
+    // Now we get the return values.
+    while (sqlite3_step(stmt) == SQLITE_ROW){
+	// TODO: Get the values
     }
     // TODO: Implement
     return -1;
