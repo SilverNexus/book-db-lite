@@ -489,19 +489,24 @@ int open_db(const char * const path){
 	    // Check for additional records in Version.
 	    if (sqlite3_step(stmt) != SQLITE_DONE){
 		// TODO: Give error of malformed table.
+		sqlite3_finalize(stmt);
 		return 1;
 	    }
-
+	    sqlite3_finalize(stmt);
 	    return 0;
 	}
     }
     else if (result == SQLITE_DONE){
 	// TODO: Throw an error saying there is no schema version.
+	sqlite3_finalize(stmt);
+	return 1;
     }
     else{
 	// TODO: Throw an error saying the database could not be accessed.
+	sqlite3_finalize(stmt);
 	return -1;
     }
+    sqlite3_finalize(stmt);
     return 0;
 }
 
