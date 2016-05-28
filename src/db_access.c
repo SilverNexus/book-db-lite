@@ -260,8 +260,10 @@ int new_db(sqlite3 *db){
 	"Title    TEXT NOT NULL,"
 	"Subtitle TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Owner
@@ -272,8 +274,10 @@ int new_db(sqlite3 *db){
 	"OwnerMiddle TEXT,"
 	"OwnerSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Type
@@ -281,8 +285,10 @@ int new_db(sqlite3 *db){
 	"TypeID   INTEGER PRIMARY KEY,"
 	"TypeName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Genre
@@ -290,8 +296,10 @@ int new_db(sqlite3 *db){
 	"GenreID   INTEGER PRIMARY KEY,"
 	"GenreName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Author
@@ -302,8 +310,10 @@ int new_db(sqlite3 *db){
 	"AuthorMiddle TEXT,"
 	"AuthorSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Printing
@@ -315,8 +325,10 @@ int new_db(sqlite3 *db){
 	"TypeID      INTEGER REFERENCES Type(TypeID),"
 	"PrintingNum INTEGER)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // BookOwner
@@ -326,8 +338,10 @@ int new_db(sqlite3 *db){
 	"Quantity   INTEGER NOT NULL),"
 	"PRIMARY KEY(PrintingID, OwnerID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // BookGenre
@@ -336,8 +350,10 @@ int new_db(sqlite3 *db){
 	"GenreID INTEGER REFERENCES Genre(GenreID),"
 	"PRIMARY KEY(BookID, GenreID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // BookAuthor
@@ -347,16 +363,20 @@ int new_db(sqlite3 *db){
 	"AuthorOrder INTEGER,"
 	"PRIMARY KEY(BookID, AuthorID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Version
     if (sqlite3_prepare(db, "CREATE TABLE Version("
 	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Now we add the initial data
@@ -364,10 +384,14 @@ int new_db(sqlite3 *db){
     // First, add the schema version
     if (sqlite3_prepare_v2(db, "INSERT INTO Version VALUES (?)", -1, &stmt, 0) != SQLITE_OK)
 	return -1;
-    if (sqlite3_bind_int(stmt, 1, DB_SCHEMA_VERSION) != SQLITE_OK)
+    if (sqlite3_bind_int(stmt, 1, DB_SCHEMA_VERSION) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    }
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Second, add the book types -- hardcover & softcover
@@ -376,24 +400,36 @@ int new_db(sqlite3 *db){
     if (sqlite3_prepare_v2(db, "INSERT INTO Type (TypeID, TypeName) "
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_bind_int(stmt, 1, 1) != SQLITE_OK)
+    if (sqlite3_bind_int(stmt, 1, 1) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
-    if (sqlite3_bind_text(stmt, 2, "Hardcover", -1, 0) != SQLITE_OK)
+    }
+    if (sqlite3_bind_text(stmt, 2, "Hardcover", -1, 0) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    }
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Softcover is added second.
     if (sqlite3_prepare_v2(db, "INSERT INTO Type (TypeID, TypeName) "
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
-    if (sqlite3_bind_int(stmt, 1, 2) != SQLITE_OK)
+    if (sqlite3_bind_int(stmt, 1, 2) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
-    if (sqlite3_bind_text(stmt, 2, "Softcover", -1, 0) != SQLITE_OK)
+    }
+    if (sqlite3_bind_text(stmt, 2, "Softcover", -1, 0) != SQLITE_OK){
+	sqlite_finalize(stmt);
 	return -1;
-    if (sqlite3_step(stmt) != SQLITE_DONE)
+    }
+    if (sqlite3_step(stmt) != SQLITE_DONE){
+	sqlite_finalize(stmt);
 	return -1;
+    }
     sqlite3_finalize(stmt);
 
     // Initialization completed.
