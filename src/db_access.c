@@ -174,19 +174,58 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
     switch (search_field){
 	case FIELD_TITLE:
 	    strcat(querybuf, " WHERE Title = ?");
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt)
+		return -1;
+	    }
 	    break;
 	case FIELD_AUTHOR:
 	    // TODO: Parse the author, get that author's id, and get that condition on the query.
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    break;
 	case FIELD_OWNER:
 	    // TODO: Parse the owner, get that owner's id, and get that condition in the query.
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    break;
 	case FIELD_BINDING:
+	    strcat(querybuf, "WHERE TypeName = ?");
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt)
+		return -1;
+	    }
+	    break;
 	case FIELD_YEAR:
+	    strcat(querybuf, "WHERE Year = ?");
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    if (sqlite_bind_int(stmt, 1, atoi(search_text)) != SQLITE_OK){
+		sqlite3_finalize(stmt);
+		return -1;
+	    }
+	    break;
 	case FIELD_ISBN:
+	    strcat(querybuf, "WHERE ISBN = ?");
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt)
+		return -1;
+	    }
+	    break;
 	case FIELD_GENRE:
 	    //TODO: Implement
+	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    break;
+	default:
+	    // TODO: Throw an error
     }
-    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0))
-	return -1;
     // Now we get the return values.
     while (sqlite3_step(stmt) == SQLITE_ROW){
 	// TODO: Get the values

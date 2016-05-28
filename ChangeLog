@@ -1,3 +1,6 @@
+2016-05-28  Daniel Hawkins
+    * src/db_access.c: Continue implementing search function.
+
 2016-05-27  Daniel Hawkins
     * src/db_access.c: Begin implementing search function.
       Fix a couple table reference errors in some static arrays.
