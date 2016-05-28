@@ -43,6 +43,8 @@ sqlite3 *db;
  *
  * @retval -1
  * Add failed
+ *
+ * @todo Handle partial info (no ISBN, etc.)
  */
 int add(sqlite3 *db, const book * const book_info){
     if (!db)
@@ -111,6 +113,7 @@ int remove_book(sqlite3 *db, const book * const book_info){
     if (!db)
 	return -1;
     // TODO: Implement
+
     return -1;
 }
 
@@ -131,8 +134,8 @@ static const char * const table_name[] = {
     "Author",
     "Owner",
     "Type",
-    "Book",
-    "Book",
+    "Printing",
+    "Printing",
     "Genre"
 };
 
@@ -154,6 +157,24 @@ static const char * const table_name[] = {
 int search(sqlite3 *db, fields search_field, const char * const search_text){
     if (!db)
 	return -1;
+    // TODO: Determine an appropriate value to use for buffer length.
+    char querybuf[1000];
+    // Initialize the buffer to hold the common part of the query.
+    // It is less than 1000 characters, so I can safely use strcpy()
+    strcpy(querybuf, "SELECT BookID, Title, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
+	" FROM Book"
+	// TODO: Finish
+	" JOIN Printing ON Book.BookID = Printing.BookID");
+    switch (search_field){
+	case FIELD_TITLE:
+	case FIELD_AUTHOR:
+	case FIELD_OWNER:
+	case FIELD_BINDING:
+	case FIELD_YEAR:
+	case FIELD_ISBN:
+	case FIELD_GENRE:
+	    //TODO: Implement
+    }
     // TODO: Implement
     return -1;
 }

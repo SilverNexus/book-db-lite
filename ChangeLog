@@ -1,3 +1,7 @@
+2016-05-27  Daniel Hawkins
+    * src/db_access.c: Begin implementing search function.
+      Fix a couple table reference errors in some static arrays.
+
 2016-05-19  Daniel Hawkins
     * src/db_access.c: Stub out handling of failed version query in database load.
 
