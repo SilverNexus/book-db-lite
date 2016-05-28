@@ -161,10 +161,12 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
     char querybuf[1000];
     // Initialize the buffer to hold the common part of the query.
     // It is less than 1000 characters, so I can safely use strcpy()
-    strcpy(querybuf, "SELECT BookID, Title, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
+    strcpy(querybuf, "SELECT BookID, PrintingID, Title, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
 	" FROM Book"
 	// TODO: Finish
-	" JOIN Printing ON Book.BookID = Printing.BookID");
+	" JOIN Printing ON Book.BookID = Printing.BookID"
+	" JOIN Owner ON Printing.PrintingID = Owner.PrintingID"
+	" JOIN Type ON Type.TypeID = Printing.TypeID");
     switch (search_field){
 	case FIELD_TITLE:
 	case FIELD_AUTHOR:
