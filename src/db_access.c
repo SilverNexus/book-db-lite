@@ -26,6 +26,7 @@
 #include "book.h"
 #include "db_access.h"
 #include <stdlib.h>
+#include <string.h>
 
 sqlite3 *db;
 
@@ -57,15 +58,15 @@ int add(sqlite3 *db, const book * const book_info){
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 1, book_info->title, -1, 0) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_int(stmt, 2, book_info->year) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 3, book_info->ISBN, -1, 0) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     // Unallocated array of book ids.
@@ -157,14 +158,14 @@ static const char * const table_name[] = {
  * @todo
  * In which way do I intend to give back results?
  */
-int search(sqlite3 *db, fields search_field, const char * const search_text){
+int search(sqlite3 *db, fields search_field, char * const search_text){
     if (!db)
 	return -1;
     // TODO: Determine an appropriate value to use for buffer length.
     char querybuf[1000];
     sqlite3_stmt *stmt;
     // We may return more than one book with this, so allow for allocation of an array of info structures.
-    book_info *results;
+    book *results;
     // Initialize the buffer to hold the common part of the query.
     // It is less than 1000 characters, so I can safely use strcpy()
     strcpy(querybuf, "SELECT BookID, PrintingID, Title, Subtitle, AuthorID, OwnerID, TypeName, Year, ISBN, GenreID"
@@ -180,12 +181,59 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
 		return -1;
 	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
-		sqlite3_finalize(stmt)
+		sqlite3_finalize(stmt);
 		return -1;
 	    }
 	    break;
 	case FIELD_AUTHOR:
-	    // TODO: Parse the author, get that author's id, and get that condition on the query.
+	    // Silences compiler error about declarations not being statements
+	    ;
+	    // Parse the author, get that author's id, and get that condition on the query.
+	    char *name[3];
+	    // For simplicity, I will assume that the author's name sections are seperated by a space.
+	    name[0] = strtok(search_text, " ");
+	    name[1] = strtok(0, " ");
+	    // This one should go to the end, so the space may be superfluous.
+	    name[2] = strtok(0, " ");
+	    // Now we get the author id.
+	    if (sqlite3_prepare_v2(db, "SELECT AuthorID FROM Author WHERE AuthorFirst = ? AND "
+			    "AuthorMiddle = ? AND AuthorLast = ?", -1, &stmt, 0) != SQLITE_OK)
+		return -1;
+	    // Bind the parameters to prevent SQL injection
+	    if (sqlite3_bind_text(stmt, 1, name[0], -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt);
+		return -1;
+	    }
+	    if (sqlite3_bind_text(stmt, 2, name[1], -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt);
+		return -1;
+	    }
+	    if (sqlite3_bind_text(stmt, 3, name[2], -1, 0) != SQLITE_OK){
+		sqlite3_finalize(stmt);
+		return -1;
+	    }
+	    int res;
+	    int *list;
+	    while (sqlite3_step(stmt) == SQLITE_ROW){
+		// TODO: Gather the list of values.
+	    }
+	    if (sizeof(list) > sizeof(int *)){
+		// TODO: If more than 1 ID returned, we need to disambiguate farther.
+		// TODO: Set result after disambiguation.
+	    }
+	    else if (sizeof(list) < sizeof(int *)){
+		// No results, so return an empty list
+		sqlite3_finalize(stmt);
+		return 0;
+	    }
+	    else{
+		res = list[0];
+	    }
+	    // TODO: Assert that result has been set.
+
+	    // TODO: Use the author id in the WHERE clause we append to the query.
+
+	    // Run the search
 	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
 		return -1;
 	    break;
@@ -199,7 +247,7 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
 		return -1;
 	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
-		sqlite3_finalize(stmt)
+		sqlite3_finalize(stmt);
 		return -1;
 	    }
 	    break;
@@ -207,7 +255,7 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 	    strcat(querybuf, "WHERE Year = ?");
 	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
 		return -1;
-	    if (sqlite_bind_int(stmt, 1, atoi(search_text)) != SQLITE_OK){
+	    if (sqlite3_bind_int(stmt, 1, atoi(search_text)) != SQLITE_OK){
 		sqlite3_finalize(stmt);
 		return -1;
 	    }
@@ -217,7 +265,7 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 	    if (sqlite3_prepare_v2(db, querybuf, -1, &stmt, 0) != SQLITE_OK)
 		return -1;
 	    if (sqlite3_bind_text(stmt, 1, search_text, -1, 0) != SQLITE_OK){
-		sqlite3_finalize(stmt)
+		sqlite3_finalize(stmt);
 		return -1;
 	    }
 	    break;
@@ -227,7 +275,7 @@ int search(sqlite3 *db, fields search_field, const char * const search_text){
 		return -1;
 	    break;
 	default:
-	    // TODO: Throw an error
+	    ;// TODO: Throw an error
     }
     // Now we get the return values.
     while (sqlite3_step(stmt) == SQLITE_ROW){
@@ -264,7 +312,7 @@ int new_db(sqlite3 *db){
 	"Subtitle TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -278,7 +326,7 @@ int new_db(sqlite3 *db){
 	"OwnerSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -289,7 +337,7 @@ int new_db(sqlite3 *db){
 	"TypeName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -300,7 +348,7 @@ int new_db(sqlite3 *db){
 	"GenreName TEXT NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -314,7 +362,7 @@ int new_db(sqlite3 *db){
 	"AuthorSuffix TEXT)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -329,7 +377,7 @@ int new_db(sqlite3 *db){
 	"PrintingNum INTEGER)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -342,7 +390,7 @@ int new_db(sqlite3 *db){
 	"PRIMARY KEY(PrintingID, OwnerID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -354,7 +402,7 @@ int new_db(sqlite3 *db){
 	"PRIMARY KEY(BookID, GenreID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -367,7 +415,7 @@ int new_db(sqlite3 *db){
 	"PRIMARY KEY(BookID, AuthorID))", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -377,7 +425,7 @@ int new_db(sqlite3 *db){
 	"SchemaVersion INTEGER NOT NULL)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -388,11 +436,11 @@ int new_db(sqlite3 *db){
     if (sqlite3_prepare_v2(db, "INSERT INTO Version VALUES (?)", -1, &stmt, 0) != SQLITE_OK)
 	return -1;
     if (sqlite3_bind_int(stmt, 1, DB_SCHEMA_VERSION) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -404,15 +452,15 @@ int new_db(sqlite3 *db){
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_bind_int(stmt, 1, 1) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 2, "Hardcover", -1, 0) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -422,15 +470,15 @@ int new_db(sqlite3 *db){
 	"VALUES (?,?)", -1, &stmt, 0) != SQLITE_OK)
 	  return -1;
     if (sqlite3_bind_int(stmt, 1, 2) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_bind_text(stmt, 2, "Softcover", -1, 0) != SQLITE_OK){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     if (sqlite3_step(stmt) != SQLITE_DONE){
-	sqlite_finalize(stmt);
+	sqlite3_finalize(stmt);
 	return -1;
     }
     sqlite3_finalize(stmt);
@@ -467,14 +515,14 @@ int open_db(const char * const path){
 	return -1;
     // Check the schema version of the db. Handle a mismatch in either direction.
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2("SELECT SchemaVersion FROM Version", -1, &stmt, 0) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db, "SELECT SchemaVersion FROM Version", -1, &stmt, 0) != SQLITE_OK)
 	return -1;
     /*
      * There should only be one value in this table.
      * We will see if more exist and throw an error if there are, but assume the
      * first error is correct.
      */
-    int result = sqlite3_step(stmt);
+    result = sqlite3_step(stmt);
     if (result == SQLITE_ROW){
 	int ver = sqlite3_column_int(stmt, 0);
 	if (ver < DB_SCHEMA_VERSION){

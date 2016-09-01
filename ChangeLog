@@ -1,3 +1,9 @@
+2016-09-01  Daniel Hawkins
+    * src/db_access.c: Continue implementing search function.
+      Fix a large quantity of function name errors on sqlite3 functions.
+    * src/db_access.h: Make search text be character constant pointer to allow
+      for tokenization on author and owner searches.
+
 2016-05-28  Daniel Hawkins
     * src/db_access.c: Continue implementing search function.
       Fix memory leaks when new_db() fails.

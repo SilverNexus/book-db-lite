@@ -40,7 +40,7 @@ typedef enum {
     FIELD_GENRE
 } fields;
 
-int search(sqlite3 *db, fields search_field, const char * const search_text);
+int search(sqlite3 *db, fields search_field, char * const search_text);
 
 int new_db(sqlite3 *db);
 
