@@ -1,3 +1,6 @@
+2016-09-10  Daniel Hawkins
+    * CMakeLists.txt: Cause the script to manually install the manpage to be invoked on build.
+
 2016-09-08  Daniel Hawkins
     * install_manpage.sh: Add a script for manual installation of a manpage on linux installs.
       Still need to get it to install via CMake, but it should be less complicated to do it this way.
